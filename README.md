@@ -29,7 +29,7 @@ src/
   scripts/main.ts          Hero motion
   scripts/ui.ts            Menu, disclosures, dialogs and photos
 scripts/headers.mjs        Generates dist/_headers with the security policy
-public/fotos/              Passport-style photos (see LEEME.md)
+public/fotos/              Passport-style photos (see README.md)
 ```
 
 ## Adding a project
