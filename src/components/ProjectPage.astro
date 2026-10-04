@@ -18,8 +18,8 @@ const fmt = new Intl.DateTimeFormat(lang === 'es' ? 'es-MX' : 'en-US', { year: '
 
 <Base lang={lang} alternates={alternates} title={`${d.titulo} — beautiful engineering`} description={d.resumen}>
   <Nav lang={lang} altHref={alternates[lang === 'es' ? 'en' : 'es']} inner />
-  <main id="contenido" class="pp">
-    <header class="pp__hero scene scene--dark">
+  <main id="contenido" class="pp" data-theme="light">
+    <header class="pp__hero scene scene--dark" data-theme="dark">
       <div class="wrap pp__hero-in">
         <a class="pp__back mono" href={`${homePath(lang)}#proyectos`}>← {t('projects.back')}</a>
         <p class="label">

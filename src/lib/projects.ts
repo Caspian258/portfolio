@@ -1,8 +1,8 @@
 import { getCollection } from 'astro:content';
 
 /**
- * Los borradores (aprobado: false) solo se muestran en desarrollo
- * o cuando PUBLIC_SHOW_DRAFTS=true (por ejemplo, en vistas previas).
+ * Drafts (aprobado: false) are only shown in development
+ * or when PUBLIC_SHOW_DRAFTS=true (for example, in previews).
  */
 export const showDrafts = import.meta.env.DEV || import.meta.env.PUBLIC_SHOW_DRAFTS === 'true';
 

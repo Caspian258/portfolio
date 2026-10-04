@@ -23,14 +23,14 @@ jobs:
           node-version-file: .nvmrc
           cache: npm
       - run: npm ci
-      - name: Tipos y esquema de contenido
+      - name: Types and content schema
         run: npm run check
       - name: Build
         run: npm run build
         env:
-          # La CI revisa también los borradores para validar su página
+          # CI also builds the drafts to validate their pages
           PUBLIC_SHOW_DRAFTS: 'true'
-      - name: Enlaces rotos
+      - name: Broken links
         uses: lycheeverse/lychee-action@v2
         with:
           args: >-

@@ -1,7 +1,7 @@
 ---
 codigo: P01
 orden: 1
-# BORRADOR: cambiar a true cuando el texto esté aprobado.
+# DRAFT: set to true once the copy is approved.
 aprobado: false
 fecha: 2026-10-03
 areas: [ciberseguridad, programacion]

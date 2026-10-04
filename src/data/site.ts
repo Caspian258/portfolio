@@ -1,7 +1,7 @@
 /*
-  Contenido de las secciones (excepto proyectos, que viven en src/content/proyectos).
-  BORRADOR: todo este texto está pendiente de aprobación del autor.
-  Cambia solo los textos; la estructura la leen los componentes.
+  Section content (except projects, which live in src/content/proyectos).
+  DRAFT: all of this copy is pending the author's approval.
+  Change only the copy; the components read the structure.
 */
 import type { Lang } from '../i18n/ui';
 
@@ -34,7 +34,11 @@ export const about: { body: T; more: T[] } = {
   ],
 };
 
-/** Fotos tipo pasaporte. Pon los archivos en public/fotos/ y escribe la ruta en src. */
+/**
+ * Passport photos. Drop the files in public/fotos/: they are picked up
+ * automatically, sorted by file name. This list gives their alt text in order;
+ * a non-null `src` overrides the folder.
+ */
 export const photos: { src: string | null; alt: T }[] = [
   { src: null, alt: { es: 'Foto de Mariano, versión 1', en: 'Photo of Mariano, version 1' } },
   { src: null, alt: { es: 'Foto de Mariano, versión 2', en: 'Photo of Mariano, version 2' } },

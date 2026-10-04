@@ -10,241 +10,302 @@ interface Props {
 const { lang, projects } = Astro.props;
 const t = useT(lang);
 const count = String(projects.length).padStart(2, '0');
+const areaLabel: Record<string, Record<Lang, string>> = {
+  ciberseguridad: { es: 'Ciberseguridad', en: 'Cybersecurity' },
+  mecatronica: { es: 'Mecatrónica', en: 'Mechatronics' },
+  ot: { es: 'OT', en: 'OT' },
+  ia: { es: 'IA', en: 'AI' },
+  ml: { es: 'ML', en: 'ML' },
+  llm: { es: 'LLMs', en: 'LLMs' },
+  programacion: { es: 'Programación', en: 'Programming' },
+};
 ---
 
-<section id="proyectos" class="projects scene" data-section data-title={t('sec.projects')} data-theme="light">
-  <div class="projects__pin" data-hscroll>
-    <div class="projects__track" data-hscroll-track>
-      <div class="projects__intro panel">
-        <p class="label" data-reveal-label>
-          <span class="label__num">03</span><span>{t('sec.projects')}</span><span class="label__stitch"></span>
-        </p>
-        <h2 class="display projects__title" data-reveal-lines>
-          <span class="reveal-line"><span>{t('sec.projects')}</span></span>
-          <span class="reveal-line"><span><em>({count})</em></span></span>
+<section id="proyectos" class="projects scene scene--dark" data-section data-title={t('sec.projects')} data-theme="dark">
+  <div class="projects__stage" data-corridor>
+    <div class="corridor" aria-hidden="true">
+      <div class="corridor__room">
+        <span class="corridor__wall corridor__wall--l"></span>
+        <span class="corridor__wall corridor__wall--r"></span>
+        <span class="corridor__wall corridor__wall--t"></span>
+        <span class="corridor__wall corridor__wall--b"></span>
+      </div>
+      <span class="corridor__thread"></span>
+    </div>
+
+    <ol class="projects__items" data-corridor-items>
+      <li class="projects__item projects__intro" data-corridor-item>
+        <h2 class="display projects__title" data-split>
+          {t('sec.projects')} <em>({count})</em>
         </h2>
         <p class="projects__lead">{t('projects.lead')}</p>
-      </div>
+      </li>
 
       {
         projects.length === 0 && (
-          <div class="panel projects__empty">
+          <li class="projects__item projects__note" data-corridor-item>
             <p>{t('projects.empty')}</p>
-          </div>
+          </li>
         )
       }
 
       {
         projects.map((p) => {
           const d = p.data[lang];
+          const areas = p.data.areas.map((a) => areaLabel[a]?.[lang] ?? a).join(' · ');
           return (
-            <article class="card panel" aria-labelledby={`card-${p.id}`}>
-              <header class="card__head">
-                <span class="card__code">{p.data.codigo}</span>
-                {!p.data.aprobado && <span class="card__draft">{t('projects.draft')}</span>}
-              </header>
-              <h3 class="card__title" id={`card-${p.id}`}>
-                {d.titulo}
-              </h3>
-              <p class="card__sum">{d.resumen}</p>
-              {p.data.metricas.length > 0 && (
-                <dl class="card__metrics">
-                  {p.data.metricas.map((m) => (
-                    <div>
-                      <dt>{m[lang]}</dt>
-                      <dd>{m.valor}</dd>
-                    </div>
-                  ))}
-                </dl>
-              )}
-              <footer class="card__foot">
-                <ul class="card__stack" aria-label={t('projects.stack')}>
-                  {p.data.stack.map((s) => (
-                    <li>{s}</li>
-                  ))}
-                </ul>
-                <button class="btn" type="button" data-dialog-open={`dlg-${p.id}`} aria-haspopup="dialog">
-                  {t('projects.detail')} <span class="btn__plus" aria-hidden="true">+</span>
-                </button>
-              </footer>
-
-              <dialog class="dlg scene scene--dark" data-lenis-prevent id={`dlg-${p.id}`} aria-labelledby={`dlg-title-${p.id}`} data-dialog>
-                <div class="dlg__inner">
-                  <div class="dlg__bar">
-                    <span class="label">
-                      <span class="label__num">{p.data.codigo}</span>
-                      <span>{t('sec.projects')}</span>
-                    </span>
-                    <button class="btn" type="button" data-dialog-close>
-                      {t('projects.close')} <span aria-hidden="true">×</span>
-                    </button>
-                  </div>
-                  <h3 class="display dlg__title" id={`dlg-title-${p.id}`}>
-                    {d.titulo}
-                  </h3>
-                  <ProjectBody project={p} lang={lang} compact />
-                  <p class="dlg__links">
-                    <a class="btn" href={projectPath(lang, p.id)}>
-                      {t('projects.page')} <span aria-hidden="true">→</span>
-                    </a>
-                    <a class="btn" href={p.data.repo} rel="noopener" target="_blank">
-                      {t('projects.repo')} <span aria-hidden="true">↗</span>
-                    </a>
+            <li class="projects__item" data-corridor-item>
+              <article class="card" aria-labelledby={`card-${p.id}`}>
+                <header class="card__head">
+                  <span class="ann card__code">
+                    {p.data.codigo}
+                    {areas && ` · ${areas}`}
+                  </span>
+                  {!p.data.aprobado && <span class="card__draft">{t('projects.draft')}</span>}
+                </header>
+                <h3 class="card__title" id={`card-${p.id}`}>
+                  {d.titulo}
+                </h3>
+                <p class="card__sum">{d.resumen}</p>
+                {p.data.metricas.length > 0 && (
+                  <dl class="card__metrics">
+                    {p.data.metricas.map((m) => (
+                      <div>
+                        <dt>{m[lang]}</dt>
+                        <dd>{m.valor}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                )}
+                <footer class="card__foot">
+                  <p class="mono card__stack">
+                    <span class="sr-only">{t('projects.stack')}: </span>
+                    {p.data.stack.join(' · ')}
                   </p>
-                </div>
-              </dialog>
-            </article>
+                  <button class="btn" type="button" data-dialog-open={`dlg-${p.id}`} aria-haspopup="dialog">
+                    {t('projects.detail')} <span class="btn__plus" aria-hidden="true">+</span>
+                  </button>
+                </footer>
+
+                <dialog class="dlg scene scene--dark" data-lenis-prevent id={`dlg-${p.id}`} aria-labelledby={`dlg-title-${p.id}`} data-dialog>
+                  <div class="dlg__inner">
+                    <div class="dlg__bar">
+                      <span class="label">
+                        <span class="label__num">{p.data.codigo}</span>
+                        <span>{t('sec.projects')}</span>
+                      </span>
+                      <button class="btn" type="button" data-dialog-close>
+                        {t('projects.close')} <span aria-hidden="true">×</span>
+                      </button>
+                    </div>
+                    <h3 class="display dlg__title" id={`dlg-title-${p.id}`}>
+                      {d.titulo}
+                    </h3>
+                    <ProjectBody project={p} lang={lang} compact />
+                    <p class="dlg__links">
+                      <a class="btn" href={projectPath(lang, p.id)}>
+                        {t('projects.page')} <span aria-hidden="true">→</span>
+                      </a>
+                      <a class="btn" href={p.data.repo} rel="noopener" target="_blank">
+                        {t('projects.repo')} <span aria-hidden="true">↗</span>
+                      </a>
+                    </p>
+                  </div>
+                </dialog>
+              </article>
+            </li>
           );
         })
       }
 
-      <div class="panel projects__next">
-        <span class="projects__next-line" aria-hidden="true"></span>
+      <li class="projects__item projects__note" data-corridor-item>
         <p>{t('projects.next')}</p>
-      </div>
-    </div>
+      </li>
+    </ol>
+
+    <p class="ann projects__z" aria-hidden="true">z = <span data-corridor-z>−1200</span> → 0 mm</p>
   </div>
 </section>
 
 <style>
   .projects {
-    --bg: var(--c-paper);
     overflow: clip;
   }
-  .projects__pin {
+  .projects__stage {
+    position: relative;
     min-height: 100svh;
-    display: flex;
-    align-items: center;
-    padding-block: var(--sp-9) var(--sp-7);
+    padding: calc(var(--sp-8) + var(--sp-4)) var(--gutter) var(--sp-8);
   }
-  .projects__track {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: stretch;
-    gap: var(--sp-6);
-    padding-inline: var(--gutter);
-    will-change: transform;
+
+  /* The perspective box: only in this section */
+  .corridor {
+    position: absolute;
+    inset: 0;
+    perspective: 700px;
+    pointer-events: none;
+    overflow: hidden;
   }
-  /* Recorrido horizontal: solo cuando el script lo activa */
-  .is-hscroll .projects__track {
-    flex-wrap: nowrap;
+  .corridor__room {
+    position: absolute;
+    inset: 0;
+    transform-style: preserve-3d;
   }
-  .panel {
-    flex: 0 0 auto;
+  .corridor__wall {
+    position: absolute;
+    background-image:
+      linear-gradient(color-mix(in srgb, var(--c-denim-300) 30%, transparent) 1px, transparent 1px),
+      linear-gradient(90deg, color-mix(in srgb, var(--c-denim-300) 30%, transparent) 1px, transparent 1px);
+    background-size: 160px 150px;
+  }
+  .corridor__wall--l,
+  .corridor__wall--r {
+    top: 0;
+    width: 1600px;
+    height: 100%;
+  }
+  .corridor__wall--l {
+    left: 0;
+    transform-origin: left center;
+    transform: rotateY(90deg);
+  }
+  .corridor__wall--r {
+    right: 0;
+    transform-origin: right center;
+    transform: rotateY(-90deg);
+  }
+  .corridor__wall--t,
+  .corridor__wall--b {
+    left: 0;
+    width: 100%;
+    height: 1600px;
+  }
+  .corridor__wall--t {
+    top: 0;
+    transform-origin: center top;
+    transform: rotateX(-90deg);
+  }
+  .corridor__wall--b {
+    bottom: 0;
+    transform-origin: center bottom;
+    transform: rotateX(90deg);
+  }
+  .corridor__thread {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: var(--thread-w);
+    height: 26%;
+    background: var(--c-thread);
+    transform: translateX(-50%);
+    transform-origin: bottom center;
+  }
+
+  .projects__items {
+    position: relative;
+    z-index: var(--z-content);
+    list-style: none;
+    padding: 0;
+    display: grid;
+    justify-items: center;
+    gap: var(--sp-8);
+  }
+  .projects__item {
+    width: min(42.5rem, 100%);
   }
   .projects__intro {
-    width: min(34rem, 82vw);
-    display: flex;
-    flex-direction: column;
-    gap: var(--sp-6);
-    justify-content: center;
+    display: grid;
+    gap: var(--sp-5);
+    text-align: center;
+    justify-items: center;
   }
   .projects__title em {
     font-weight: 300;
-    color: var(--c-denim-500);
+    color: var(--c-denim-300);
   }
   .projects__lead {
-    max-width: 34ch;
+    max-width: 40ch;
     color: var(--fg-muted);
   }
-  .projects__empty,
-  .projects__next {
-    width: min(26rem, 80vw);
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: var(--sp-5);
+  .projects__note p {
     font-family: var(--font-display);
     font-size: var(--fs-lg);
-    line-height: 1.25;
+    line-height: 1.3;
     color: var(--fg-muted);
+    text-align: center;
+    max-width: 30ch;
+    margin-inline: auto;
   }
-  .projects__next-line {
-    width: 100%;
-    border-top: var(--stitch-dark);
+  .projects__z {
+    position: absolute;
+    left: var(--gutter);
+    bottom: var(--sp-5);
+    z-index: var(--z-content);
   }
 
   .card {
-    width: min(46rem, 88vw);
-    min-height: min(70svh, 40rem);
-    display: flex;
-    flex-direction: column;
+    display: grid;
     gap: var(--sp-5);
-    padding: var(--sp-6);
-    background: var(--c-paper-2);
-    border: 1px solid var(--line);
-    border-radius: var(--radius-m);
-    position: relative;
-  }
-  .card::after {
-    /* costura interior */
-    content: '';
-    position: absolute;
-    inset: 10px;
-    border: 1.5px dashed color-mix(in srgb, var(--c-thread-dark) 45%, transparent);
-    border-radius: 4px;
-    pointer-events: none;
+    padding: clamp(1.25rem, 0.8rem + 1.6vw, 2rem);
+    background: var(--c-denim-800);
+    border: 1px solid color-mix(in srgb, var(--c-denim-300) 45%, transparent);
+    border-radius: var(--radius-s);
   }
   .card__head {
     display: flex;
     justify-content: space-between;
     align-items: baseline;
+    gap: var(--sp-3);
   }
   .card__code {
-    font-family: var(--font-display);
-    font-style: italic;
-    font-weight: 300;
-    font-size: var(--fs-xl);
-    line-height: 1;
-    color: var(--c-denim-500);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    white-space: normal;
   }
   .card__draft {
     font-family: var(--font-mono);
-    font-size: var(--fs-xs);
-    letter-spacing: var(--track-label);
+    font-size: var(--fs-mono);
+    letter-spacing: 0.1em;
     text-transform: uppercase;
     padding: 0.3em 0.7em;
-    border: 1px dashed var(--c-thread-dark);
-    color: var(--c-thread-dark);
+    border: 1px dashed var(--c-thread);
+    color: var(--c-thread);
     border-radius: 999px;
+    flex-shrink: 0;
   }
   .card__title {
     font-family: var(--font-display);
-    font-weight: 560;
-    font-size: var(--fs-xl);
-    line-height: 0.95;
-    letter-spacing: var(--track-display);
+    font-weight: 400;
+    font-size: clamp(1.9rem, 1.2rem + 2.1vw, 3.25rem);
+    line-height: 1;
+    letter-spacing: -0.02em;
   }
   .card__sum {
-    max-width: 48ch;
-    color: var(--fg-muted);
+    max-width: 52ch;
+    color: var(--c-denim-300);
   }
   .card__metrics {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
-    gap: var(--sp-4);
-    margin-top: auto;
-    padding-top: var(--sp-5);
-    border-top: 1px solid var(--line);
+    gap: var(--sp-4) var(--sp-5);
   }
   .card__metrics div {
     display: flex;
     flex-direction: column-reverse;
-    gap: var(--sp-1);
+    gap: var(--sp-2);
   }
   .card__metrics dd {
     margin: 0;
     font-family: var(--font-display);
-    font-size: var(--fs-lg);
-    font-weight: 560;
-    letter-spacing: -0.02em;
+    font-weight: 300;
+    font-size: clamp(1.75rem, 1.2rem + 1.4vw, 2.6rem);
+    line-height: 1;
     font-variant-numeric: tabular-nums;
   }
   .card__metrics dt {
     font-family: var(--font-mono);
-    font-size: var(--fs-xs);
-    color: var(--fg-muted);
-    line-height: 1.35;
+    font-size: var(--fs-mono);
+    color: var(--c-denim-300);
+    line-height: 1.45;
   }
   .card__foot {
     display: flex;
@@ -252,25 +313,33 @@ const count = String(projects.length).padStart(2, '0');
     justify-content: space-between;
     align-items: center;
     gap: var(--sp-4);
-    position: relative;
-    z-index: 1;
   }
   .card__stack {
-    display: flex;
-    flex-wrap: wrap;
-    gap: var(--sp-2);
-    padding: 0;
-    list-style: none;
-  }
-  .card__stack li {
-    font-family: var(--font-mono);
-    font-size: var(--fs-xs);
-    padding: 0.25em 0.6em;
-    border: 1px solid var(--line);
-    border-radius: 999px;
+    font-size: var(--fs-mono);
+    color: var(--c-denim-300);
+    letter-spacing: 0.04em;
   }
 
-  /* Diálogo de detalle */
+  /* Corridor mode (set by the script on wide screens with motion allowed) */
+  .is-corridor .projects__stage {
+    height: 100svh;
+    padding: 0;
+  }
+  .is-corridor .projects__items {
+    position: absolute;
+    inset: 0;
+    display: block;
+    perspective: 700px;
+  }
+  .is-corridor .projects__item {
+    position: absolute;
+    left: 50%;
+    top: 52%;
+    width: min(42.5rem, 80vw);
+    will-change: transform, opacity;
+  }
+
+  /* Project dialog */
   .dlg {
     position: fixed;
     inset: 0;
@@ -306,22 +375,12 @@ const count = String(projects.length).padStart(2, '0');
     gap: var(--sp-3);
   }
   @media (max-width: 767px) {
-    .projects__pin {
-      padding-block: var(--sp-8);
+    .corridor__room {
+      display: none;
     }
-    .projects__track {
-      flex-direction: column;
-      gap: var(--sp-7);
-    }
-    .projects__intro,
-    .card,
-    .projects__empty,
-    .projects__next {
-      width: 100%;
-    }
-    .card {
-      min-height: 0;
-      padding: var(--sp-5);
+    .corridor__thread,
+    .projects__z {
+      display: none;
     }
     .dlg__inner {
       padding: var(--sp-5);

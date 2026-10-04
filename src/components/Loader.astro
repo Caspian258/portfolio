@@ -6,17 +6,22 @@ const t = useT(Astro.props.lang);
 
 <div class="loader" data-loader role="status" aria-live="polite">
   <span class="sr-only">{t('loader.label')}</span>
-  <div class="loader__inner" aria-hidden="true">
-    <p class="loader__name">
-      <span class="loader__line"><span>beautiful</span></span>
-      <span class="loader__line"><span><em>engineering</em></span></span>
-    </p>
-    <div class="loader__meta">
-      <span>Mariano Villagómez</span>
-      <span class="loader__pct"><span data-loader-pct>000</span>%</span>
+  <div class="loader__scene" aria-hidden="true">
+    <div class="loader__tilt">
+      <div class="loader__ring" data-ring>
+        <span class="loader__orbit"></span>
+        <p class="loader__text" data-ring-text>BEAUTIFUL ENGINEERING · MARIANO VILLAGÓMEZ ·</p>
+      </div>
     </div>
-    <div class="loader__thread"><span data-loader-bar></span></div>
   </div>
+  <svg class="loader__tail" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M50 56 C50 74 42 90 3 95.5" vector-effect="non-scaling-stroke"></path>
+  </svg>
+  <div class="loader__meta" aria-hidden="true">
+    <span class="mono">Mariano Villagómez</span>
+    <span class="loader__pct"><span data-loader-pct>000</span><span class="loader__unit">%</span></span>
+  </div>
+  <div class="loader__bar" aria-hidden="true"><span data-loader-bar></span></div>
 </div>
 
 <style>
@@ -24,64 +29,111 @@ const t = useT(Astro.props.lang);
     display: none;
   }
   :global(.js) .loader {
+    --hole: 0px;
     position: fixed;
     inset: 0;
     z-index: var(--z-loader);
-    display: flex;
-    align-items: flex-end;
+    display: block;
     background: var(--c-denim-900);
     color: var(--c-paper);
-    padding: var(--gutter);
+    -webkit-mask-image: radial-gradient(circle at 50% 50%, transparent var(--hole), #000 calc(var(--hole) + 1px));
+    mask-image: radial-gradient(circle at 50% 50%, transparent var(--hole), #000 calc(var(--hole) + 1px));
   }
   :global(.js.is-loaded) .loader {
     display: none;
   }
-  .loader__inner {
-    width: 100%;
+  .loader__scene {
+    position: absolute;
+    left: 50%;
+    top: 44%;
+    width: 0;
+    height: 0;
+    perspective: 900px;
   }
-  .loader__name {
+  .loader__tilt {
+    transform-style: preserve-3d;
+    transform: rotateX(-16deg);
+  }
+  .loader__ring {
+    --r: clamp(8.5rem, 5rem + 12vw, 15rem);
+    position: relative;
+    transform-style: preserve-3d;
+  }
+  .loader__orbit {
+    position: absolute;
+    left: calc(-1 * var(--r));
+    top: calc(-1 * var(--r));
+    width: calc(2 * var(--r));
+    height: calc(2 * var(--r));
+    border: var(--thread-w) solid var(--c-thread);
+    border-radius: 50%;
+    opacity: 0.55;
+    transform: rotateX(90deg);
+  }
+  .loader__text {
+    position: absolute;
+    left: 0;
+    top: 0;
     font-family: var(--font-display);
-    font-weight: 560;
-    font-size: clamp(3rem, 1rem + 9vw, 10rem);
-    line-height: 0.88;
-    letter-spacing: var(--track-display);
+    font-size: clamp(1.25rem, 0.8rem + 1.4vw, 2.25rem);
+    line-height: 1;
+    white-space: nowrap;
+    transform-style: preserve-3d;
+    visibility: hidden; /* shown once split into the ring */
   }
-  .loader__name em {
-    font-style: italic;
-    font-weight: 300;
-    color: var(--c-denim-300);
+  .loader__text :global(.ring-ch) {
+    position: absolute;
+    left: 0;
+    top: 0;
   }
-  .loader__line {
-    display: block;
-    overflow: hidden;
-    padding-bottom: 0.2em;
-    margin-bottom: -0.14em;
-  }
-  .loader__line > span {
-    display: inline-block;
+  .loader__tail {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    fill: none;
+    stroke: var(--c-thread);
+    stroke-width: var(--thread-w);
   }
   .loader__meta {
+    position: absolute;
+    left: var(--gutter);
+    right: var(--gutter);
+    bottom: calc(var(--gutter) + 1.25rem);
     display: flex;
     justify-content: space-between;
-    margin-top: var(--sp-6);
-    font-family: var(--font-mono);
-    font-size: var(--fs-sm);
-    letter-spacing: 0.04em;
+    align-items: flex-end;
+  }
+  .loader__meta .mono {
+    font-size: var(--fs-mono);
     color: var(--c-denim-300);
+    letter-spacing: 0.06em;
   }
   .loader__pct {
-    color: var(--c-paper);
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(4rem, 2rem + 6vw, 8rem);
+    line-height: 0.8;
     font-variant-numeric: tabular-nums;
   }
-  .loader__thread {
-    margin-top: var(--sp-3);
-    height: 2px;
-    background: color-mix(in srgb, var(--c-paper) 12%, transparent);
+  .loader__unit {
+    margin-left: 0.2em;
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-sm);
+    color: var(--c-denim-300);
   }
-  .loader__thread span {
+  .loader__bar {
+    position: absolute;
+    left: var(--gutter);
+    right: var(--gutter);
+    bottom: var(--gutter);
+    height: var(--thread-w);
+    background: color-mix(in srgb, var(--c-paper) 14%, transparent);
+  }
+  .loader__bar span {
     display: block;
     height: 100%;
-    background: repeating-linear-gradient(90deg, var(--c-thread) 0 10px, transparent 10px 16px);
+    background: var(--c-thread);
     transform: scaleX(0);
     transform-origin: left center;
   }

@@ -2,13 +2,13 @@ import { defineCollection } from 'astro:content';
 import { glob } from 'astro/loaders';
 import { z } from 'astro/zod';
 
-/** Texto de un proyecto en un idioma. */
+/** A project's copy in one language. */
 const texto = z.object({
   titulo: z.string().min(3).max(70),
-  /** Una o dos frases; se muestra en la tarjeta. */
+  /** One or two sentences; shown on the card. */
   resumen: z.string().min(20).max(180),
   problema: z.string().min(20),
-  /** Pasos de cómo funciona, en orden. */
+  /** How it works, step by step. */
   solucion: z.array(z.string().min(5)).min(1),
   resultados: z.string().min(10),
   limitaciones: z.array(z.string().min(5)).default([]),
@@ -28,12 +28,12 @@ const areas = z.enum([
 const proyectos = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/proyectos' }),
   schema: z.object({
-    /** Código de la ruta: P01, P02… */
+    /** Learning path code: P01, P02… */
     codigo: z.string().regex(/^P\d{2}$/),
     orden: z.number().int().positive(),
     /**
-     * Solo se publica en producción cuando es true.
-     * Un proyecto pasa a true cuando el autor aprueba el texto.
+     * Only published in production when true.
+     * A project becomes true once the author approves its copy.
      */
     aprobado: z.boolean().default(false),
     fecha: z.coerce.date(),
@@ -41,7 +41,7 @@ const proyectos = defineCollection({
     stack: z.array(z.string()).min(1),
     repo: z.url(),
     demo: z.url().optional(),
-    /** Cifras reales, máximo 4. Sin cifras inventadas. */
+    /** Real figures, 4 at most. No invented numbers. */
     metricas: z
       .array(z.object({ valor: z.string(), es: z.string(), en: z.string() }))
       .max(4)

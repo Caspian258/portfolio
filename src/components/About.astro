@@ -1,5 +1,5 @@
 ---
-import PhotoSlot from './PhotoSlot.astro';
+import Photo from './Photo.astro';
 import { about } from '../data/site';
 import { type Lang, useT } from '../i18n/ui';
 interface Props { lang: Lang }
@@ -7,18 +7,16 @@ const { lang } = Astro.props;
 const t = useT(lang);
 ---
 
-<section id="sobre-mi" class="about scene scene--dark" data-section data-title={t('sec.about')} data-theme="dark">
+<section id="sobre-mi" class="about" data-section data-title={t('sec.about')} data-theme="light" data-about>
   <div class="wrap about__wrap">
-    <p class="label" data-reveal-label>
-      <span class="label__num">02</span><span>{t('sec.about')}</span><span class="label__stitch"></span>
-    </p>
+    <div class="about__dock" data-photo-dock>
+      <Photo lang={lang} />
+    </div>
 
-    <h2 class="about__title display" data-reveal-lines>
-      <span class="reveal-line"><span>{t('about.lead1')} <PhotoSlot lang={lang} /> {t('about.lead2')}</span></span>
-    </h2>
-
-    <div class="about__cols">
-      <p class="about__body" data-reveal-fade>{about.body[lang]}</p>
+    <div class="about__text">
+      <h2 class="display about__title" data-split>{t('about.lead1')} {t('about.lead2')}</h2>
+      <span class="about__rule" aria-hidden="true" data-about-rule></span>
+      <p class="about__body" data-reveal>{about.body[lang]}</p>
 
       <details class="x-expand about__more" data-expand>
         <summary class="btn">{t('about.more')} <span class="btn__plus" aria-hidden="true">+</span></summary>
@@ -33,56 +31,85 @@ const t = useT(lang);
 </section>
 
 <style>
+  .about {
+    --gap: clamp(2rem, 1rem + 4.5vw, 8rem);
+    pointer-events: none;
+    position: relative;
+    z-index: 3;
+    color: var(--c-ink);
+  }
+  /* About slides over the pinned Intro: only its own text takes pointer events */
   .about__wrap {
-    padding-block: var(--sp-9) var(--sp-9);
     min-height: 100svh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: var(--sp-7);
+    display: grid;
+    grid-template-columns: minmax(0, 37.5vw) minmax(0, 1fr);
+    gap: var(--gap);
+    align-items: start;
+    padding-block: calc(var(--sp-8) + var(--sp-6)) var(--sp-8);
+  }
+  .about__dock {
+    position: relative;
+    width: 100%;
+    max-width: 34rem;
+    aspect-ratio: 7 / 9;
+  }
+  .about__text {
+    pointer-events: auto;
+    display: grid;
+    gap: var(--sp-5);
+    padding-top: clamp(1rem, 6vh, 4.5rem);
+    min-width: 0;
   }
   .about__title {
-    font-size: var(--fs-xxl);
+    font-size: var(--fs-xl);
+    font-weight: 400;
   }
-  .about__cols {
-    display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-    gap: var(--sp-7);
-    align-items: start;
+  /* The thread leaves the photo frame and underlines the heading */
+  .about__rule {
+    display: block;
+    height: var(--thread-w);
+    margin-left: calc(-1 * (var(--gap) - 10px));
+    background: var(--c-thread-dark);
+    transform-origin: left center;
   }
   .about__body {
-    font-size: var(--fs-lg);
-    line-height: 1.35;
-    max-width: 30ch;
+    max-width: 34ch;
     font-family: var(--font-display);
-    font-weight: 380;
+    font-weight: 300;
+    font-size: var(--fs-lg);
+    line-height: 1.38;
   }
   .about__more {
-    justify-self: start;
-    color: var(--fg);
+    margin-top: var(--sp-5);
   }
   .about__more ul {
-    margin-top: var(--sp-5);
-    padding-left: 0;
-    list-style: none;
     display: grid;
-    gap: var(--sp-4);
-    max-width: var(--measure);
+    gap: var(--sp-3);
+    max-width: 52ch;
+    padding: var(--sp-5) 0 0 1.1em;
     color: var(--fg-muted);
   }
-  .about__more li {
-    padding-left: var(--sp-5);
-    border-left: var(--stitch);
+  .about__more li::marker {
+    color: var(--accent);
   }
   .about__more[open] .btn__plus {
     transform: rotate(45deg);
   }
-  @media (max-width: 800px) {
-    .about__cols {
+  @media (max-width: 767px) {
+    .about__wrap {
       grid-template-columns: 1fr;
+      gap: var(--sp-6);
+      padding-block: calc(var(--sp-8) + var(--sp-3)) var(--sp-8);
     }
-    .about__body {
-      max-width: none;
+    .about__dock {
+      width: 44vw;
+      max-width: 13rem;
+    }
+    .about__text {
+      padding-top: 0;
+    }
+    .about__rule {
+      margin-left: 0;
     }
   }
 </style>

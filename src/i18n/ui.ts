@@ -24,12 +24,19 @@ export const ui = {
     'hero.kicker': 'Portafolio de Mariano Villagómez',
     'hero.areas': 'Mecatrónica · Ciberseguridad · OT · IA · ML · LLMs',
     'hero.place': 'Monterrey, MX',
-    'hero.scroll': 'Desliza',
+    'hero.coords': '25,6866° N · 100,3161° O',
+    'hero.ann.diameter': 'Ø 50,0',
+    'hero.ann.semester': 'SEM 07',
+    'hero.ann.size': '35 × 45 ±0,5',
     'about.lead1': 'Soy',
     'about.lead2': 'Mariano.',
     'about.more': 'Cómo trabajo',
-    'photo.hint': 'Clic para cambiar de foto',
     'photo.placeholder': 'Foto',
+    'photo.counter': 'Foto',
+    'photo.pause': 'Pausa',
+    'photo.resume': 'Reanudar',
+    'photo.alt': 'Foto de Mariano',
+    'photo.controls': 'Fotos de Mariano',
     'projects.lead': 'Lo que he construido y aprobado. Cada proyecto incluye cómo funciona, qué resultados dio y qué no resuelve todavía.',
     'projects.detail': 'Ver detalle',
     'projects.page': 'Página completa',
@@ -82,12 +89,19 @@ export const ui = {
     'hero.kicker': 'Portfolio of Mariano Villagómez',
     'hero.areas': 'Mechatronics · Cybersecurity · OT · AI · ML · LLMs',
     'hero.place': 'Monterrey, MX',
-    'hero.scroll': 'Scroll',
+    'hero.coords': '25.6866° N · 100.3161° W',
+    'hero.ann.diameter': 'Ø 50.0',
+    'hero.ann.semester': 'SEM 07',
+    'hero.ann.size': '35 × 45 ±0.5',
     'about.lead1': "I'm",
     'about.lead2': 'Mariano.',
     'about.more': 'How I work',
-    'photo.hint': 'Click to change photo',
     'photo.placeholder': 'Photo',
+    'photo.counter': 'Photo',
+    'photo.pause': 'Pause',
+    'photo.resume': 'Resume',
+    'photo.alt': 'Photo of Mariano',
+    'photo.controls': 'Photos of Mariano',
     'projects.lead': 'What I have built and approved. Each project explains how it works, what it found and what it does not solve yet.',
     'projects.detail': 'See details',
     'projects.page': 'Full page',
@@ -127,7 +141,7 @@ export function useT(lang: Lang) {
   return (key: UIKey): string => ui[lang][key] ?? ui[defaultLang][key];
 }
 
-/** Ruta base de cada idioma. */
+/** Base path of each language. */
 export function homePath(lang: Lang): string {
   return lang === 'es' ? '/' : '/en/';
 }
