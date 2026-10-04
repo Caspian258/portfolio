@@ -1,6 +1,6 @@
-// Genera dist/_headers (Cloudflare Pages) con una CSP estricta.
-// Calcula el hash de cada <script> en línea que Astro dejó en el HTML,
-// así no hace falta 'unsafe-inline' para scripts.
+// Writes dist/_headers (Cloudflare Pages) with a strict CSP.
+// It hashes every inline <script> Astro left in the HTML,
+// so scripts never need 'unsafe-inline'.
 import { createHash } from 'node:crypto';
 import { readdir, readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
@@ -52,4 +52,4 @@ const headers = `/*
 `;
 
 await writeFile(join(dist, '_headers'), headers);
-console.log(`_headers escrito (${hashes.size} script(s) en línea con hash)`);
+console.log(`_headers written (${hashes.size} hashed inline script(s))`);

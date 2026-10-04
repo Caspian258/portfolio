@@ -4,7 +4,7 @@ import { type Lang, useT } from '../i18n/ui';
 interface Props {
   project: CollectionEntry<'proyectos'>;
   lang: Lang;
-  /** En el diálogo los títulos son h4; en la página completa, h2. */
+  /** In the dialog headings are h4; on the full page, h2. */
   compact?: boolean;
 }
 const { project, lang, compact = false } = Astro.props;
