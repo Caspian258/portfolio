@@ -1,66 +1,67 @@
 # beautiful engineering
 
-Portafolio personal de Mariano Villagómez: mecatrónica, ciberseguridad, OT, IA, ML y LLMs.
+Personal portfolio of Mariano Villagómez: mechatronics, cybersecurity, OT, AI, ML and LLMs.
 
-Sitio estático con [Astro](https://astro.build) y TypeScript. Las animaciones usan GSAP
-(con ScrollTrigger) y Lenis para el scroll suave. Bilingüe: español en `/` e inglés en `/en/`.
+Static site built with [Astro](https://astro.build) and TypeScript. Animations use GSAP
+(with ScrollTrigger) and Lenis for smooth scrolling. Bilingual: Spanish at `/` and English at `/en/`.
 
-## Comandos
+## Commands
 
-| Comando           | Qué hace                                             |
-| ----------------- | ---------------------------------------------------- |
-| `npm install`     | Instala las dependencias (Node 22)                   |
-| `npm run dev`     | Servidor local en `http://localhost:4321`            |
-| `npm run check`   | Revisa tipos y valida el contenido contra el esquema |
-| `npm run build`   | Genera el sitio en `dist/` y el archivo `_headers`   |
-| `npm run preview` | Sirve `dist/` para revisarlo                         |
+| Command           | What it does                                          |
+| ----------------- | ----------------------------------------------------- |
+| `npm install`     | Installs dependencies (Node 22)                       |
+| `npm run dev`     | Local server at `http://localhost:4321`               |
+| `npm run check`   | Type-checks and validates content against the schema  |
+| `npm run build`   | Generates the site in `dist/` and the `_headers` file |
+| `npm run preview` | Serves `dist/` for review                             |
 
-## Estructura
+## Structure
 
 ```
 src/
-  styles/tokens.css        Design tokens: color, tipografía, espacio, movimiento
-  styles/global.css        Base y utilidades
-  content.config.ts        Esquema de los proyectos (zod)
-  content/proyectos/       Un archivo Markdown por proyecto
-  data/site.ts             Textos de sobre mí, ruta, certificaciones, habilidades y fotos
-  i18n/ui.ts               Textos de la interfaz en español e inglés
-  components/              Secciones de la página
-  scripts/main.ts          Movimiento de la portada
-  scripts/ui.ts            Menú, desplegables, diálogos y fotos
-scripts/headers.mjs        Genera dist/_headers con la política de seguridad
-public/fotos/              Fotos tipo pasaporte (ver LEEME.md)
+  styles/tokens.css        Design tokens: color, typography, spacing, motion
+  styles/global.css        Base styles and utilities
+  content.config.ts        Project schema (zod)
+  content/proyectos/       One Markdown file per project
+  data/site.ts             About, roadmap, certifications, skills and photos copy
+  i18n/ui.ts               UI strings in Spanish and English
+  components/              Page sections
+  scripts/main.ts          Hero motion
+  scripts/ui.ts            Menu, disclosures, dialogs and photos
+scripts/headers.mjs        Generates dist/_headers with the security policy
+public/fotos/              Passport-style photos (see LEEME.md)
 ```
 
-## Agregar un proyecto
+## Adding a project
 
-1. Crea `src/content/proyectos/pXX-nombre.md` copiando la estructura de `p01-analizador-logs.md`.
-2. Llena los campos en español (`es`) y en inglés (`en`). Usa solo cifras reales.
-3. Deja `aprobado: false` mientras el texto está en revisión. Los borradores se ven en
-   `npm run dev`, pero no se publican.
-4. Cuando el texto esté aprobado, cambia a `aprobado: true`.
+1. Create `src/content/proyectos/pXX-name.md` by copying the structure of `p01-analizador-logs.md`.
+2. Fill in the fields in Spanish (`es`) and English (`en`). Use real figures only.
+3. Keep `aprobado: false` while the text is under review. Drafts show up in
+   `npm run dev` but are not published.
+4. Once the text is approved, change it to `aprobado: true`.
 
-`npm run check` falla si falta un campo o si un valor no cumple el esquema.
+`npm run check` fails if a field is missing or a value does not match the schema.
 
-## Movimiento y accesibilidad
+## Motion and accessibility
 
-- Con `prefers-reduced-motion: reduce` no hay pantalla de carga, scroll suave ni animaciones;
-  todo el contenido queda visible.
-- El cursor que empuja letras solo se activa con mouse; en pantallas táctiles, un toque
-  hace una ola sobre el título.
-- Los detalles se abren con elementos `<details>` y `<dialog>` nativos, así que funcionan
-  con teclado.
+- With `prefers-reduced-motion: reduce` there is no loading screen, smooth scrolling or
+  animation; all content stays visible.
+- The letter-pushing cursor effect only activates with a mouse; on touch screens, a tap
+  makes a wave across the title.
+- Details open with native `<details>` and `<dialog>` elements, so they work with a
+  keyboard.
 
-## Despliegue
+## Deployment
 
-Cloudflare Pages, preset Astro: comando `npm run build`, carpeta de salida `dist`.
+Cloudflare Pages, Astro preset: build command `npm run build`, output directory `dist`.
 
-Variables de entorno opcionales:
+Optional environment variables:
 
-- `SITE_URL`: dominio final (por ejemplo `https://tu-dominio.com`), para las URL canónicas.
-- `PUBLIC_SHOW_DRAFTS=true`: muestra los borradores. Úsala solo en las vistas previas.
+- `SITE_URL`: final domain (for example `https://your-domain.com`), used for canonical URLs.
+- `PUBLIC_SHOW_DRAFTS=true`: shows drafts. Use it only on previews.
 
 ## CI
 
-GitHub Actions corre en cada pull request: build, `astro check`, enlaces rotos (lychee),
-Lighthouse con mínimo 90 en rendimiento y accesibilidad, y búsqueda de secretos (gitleaks).
+GitHub Actions runs on every pull request: build, `astro check`, broken links (lychee),
+Lighthouse with a minimum score of 90 for performance and accessibility, and secret
+scanning (gitleaks).
