@@ -1,53 +1,56 @@
 /*
-  Design tokens — beautiful engineering
-  Paleta denim: índigo crudo, denim medio, denim lavado, algodón sin teñir
-  y el hilo de costura cobrizo de unos jeans.
-  Todos los componentes leen de aquí; no se usan colores sueltos.
+  Design tokens: beautiful engineering
+  Denim palette: raw indigo, mid denim, washed denim, undyed cotton
+  and the copper stitching thread of a pair of jeans.
+  Every component reads from here; no loose colors.
 */
 :root {
-  /* — Color base — */
-  --c-ink: #0b1220;          /* índigo crudo, casi negro */
-  --c-denim-900: #121d33;    /* denim oscuro (fondo de escenas) */
+  /* Base colors */
+  --c-ink: #0b1220;          /* raw indigo, almost black */
+  --c-denim-900: #121d33;    /* dark denim (dark scenes) */
   --c-denim-800: #18284a;
-  --c-denim-700: #22385f;    /* denim medio */
-  --c-denim-500: #3f5f8c;    /* denim lavado */
-  --c-denim-300: #9db3cf;    /* denim gastado (texto secundario sobre oscuro) */
+  --c-denim-700: #22385f;    /* mid denim */
+  --c-denim-500: #3f5f8c;    /* washed denim */
+  --c-denim-300: #9db3cf;    /* worn denim (secondary text on dark) */
   --c-denim-100: #dde5ef;
-  --c-paper: #f3efe6;        /* algodón sin teñir (fondo claro) */
+  --c-paper: #f3efe6;        /* undyed cotton (light background) */
   --c-paper-2: #e8e2d4;
-  --c-thread: #d39a3c;       /* hilo de costura: solo sobre fondos oscuros */
-  --c-thread-dark: #8a5a12;  /* hilo sobre fondo claro (contraste AA) */
+  --c-thread: #d39a3c;       /* the common thread: only on dark backgrounds */
+  --c-thread-dark: #8a5a12;  /* the thread on light backgrounds (AA contrast) */
 
-  /* — Roles — */
+  /* Roles */
   --bg: var(--c-paper);
   --fg: var(--c-ink);
   --fg-muted: #4a5468;
   --line: color-mix(in srgb, var(--c-ink) 18%, transparent);
   --accent: var(--c-thread-dark);
+  --thread: var(--c-thread-dark);
   --focus: var(--c-denim-500);
 
-  /* — Tipografía — */
+  /* Type */
   --font-display: 'Fraunces Variable', 'Iowan Old Style', 'Palatino Linotype', Georgia, serif;
   --font-text: 'Schibsted Grotesk Variable', ui-sans-serif, 'Segoe UI', Roboto, sans-serif;
-  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --font-mono: 'Martian Mono', 'Mono Symbols', ui-monospace, 'SFMono-Regular', Menlo, monospace;
 
-  /* Escala fluida (min @ 360px → max @ 1600px) */
-  --fs-mega: clamp(4.25rem, 1.2rem + 13.5vw, 15rem);   /* título de entrada */
+  /* Fluid scale (min @ 360px, max @ 1600px) */
   --fs-xxl: clamp(2.75rem, 1.4rem + 6vw, 7.5rem);
   --fs-xl: clamp(2rem, 1.3rem + 3vw, 4.25rem);
-  --fs-lg: clamp(1.375rem, 1.1rem + 1.2vw, 2.25rem);
+  --fs-lg: clamp(1.25rem, 1.05rem + 1vw, 2rem);
   --fs-md: clamp(1.0625rem, 1rem + 0.35vw, 1.3125rem);
   --fs-sm: 0.9375rem;
   --fs-xs: 0.75rem;
+  /* Martian Mono is wide: labels and annotations sit one step smaller */
+  --fs-mono: clamp(0.625rem, 0.58rem + 0.2vw, 0.75rem);
+  --fs-mono-sm: clamp(0.6875rem, 0.64rem + 0.2vw, 0.8125rem);
 
   --lh-tight: 0.86;
   --lh-snug: 1.15;
   --lh-body: 1.55;
 
   --track-display: -0.035em;
-  --track-label: 0.14em;
+  --track-label: 0.12em;
 
-  /* — Espacio (base 4px) — */
+  /* Space (4px base) */
   --sp-1: 0.25rem;
   --sp-2: 0.5rem;
   --sp-3: 0.75rem;
@@ -61,39 +64,40 @@
   --max-w: 1440px;
   --measure: 62ch;
 
-  /* — Forma — */
+  /* Shape */
   --radius-s: 2px;
-  --radius-m: 6px;
-  --stitch: 2px dashed var(--c-thread);       /* costura */
-  --stitch-dark: 2px dashed var(--c-thread-dark);
+  --radius-m: 8px;
+  --thread-w: 2px;
 
-  /* — Movimiento — */
-  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);      /* ≈ expo.out */
-  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
-  --dur-fast: 180ms;
-  --dur-base: 420ms;
-  --dur-slow: 900ms;
+  /* Motion */
+  --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out: cubic-bezier(0.77, 0, 0.175, 1);
+  --dur-fast: 160ms;
+  --dur-base: 240ms;
+  --dur-slow: 600ms;
 
-  /* — Capas — */
-  --z-cursor: 60;
-  --z-loader: 100;
+  /* Layers */
+  --z-content: 1;
+  --z-hero: 2;
   --z-nav: 50;
+  --z-loader: 100;
 }
 
-/* Escenas oscuras: invierten los roles */
+/* Dark scenes flip the roles */
 .scene--dark {
   --bg: var(--c-denim-900);
   --fg: var(--c-paper);
   --fg-muted: var(--c-denim-300);
   --line: color-mix(in srgb, var(--c-paper) 16%, transparent);
   --accent: var(--c-thread);
+  --thread: var(--c-thread);
   --focus: var(--c-thread);
 }
 
 @media (prefers-reduced-motion: reduce) {
   :root {
     --dur-fast: 0ms;
-    --dur-base: 0ms;
-    --dur-slow: 0ms;
+    --dur-base: 120ms;
+    --dur-slow: 200ms;
   }
 }

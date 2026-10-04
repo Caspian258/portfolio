@@ -1,5 +1,4 @@
 ---
-import Letters from './Letters.astro';
 import { contact } from '../data/site';
 import { type Lang, useT } from '../i18n/ui';
 interface Props { lang: Lang }
@@ -8,26 +7,25 @@ const t = useT(lang);
 const year = new Date().getFullYear();
 ---
 
-<section id="contacto" class="contact scene scene--dark" data-section data-title={t('sec.contact')} data-theme="dark">
-  <div class="wrap contact__wrap">
-    <p class="label" data-reveal-label>
-      <span class="label__num">07</span><span>{t('sec.contact')}</span><span class="label__stitch"></span>
-    </p>
+<section id="contacto" class="contact scene scene--dark" data-section data-title={t('sec.contact')} data-theme="dark" data-contact>
+  <canvas class="contact__field" data-field="contact" aria-hidden="true"></canvas>
 
-    <h2 class="contact__title" data-repel>
-      <span class="contact__l1"><Letters text={t('contact.title1')} /></span>
-      <span class="contact__l2"><Letters text={t('contact.title2')} /></span>
+  <div class="wrap contact__wrap">
+    <h2 class="contact__title" data-split>
+      <span class="contact__l1">{t('contact.title1')}</span>
+      <span class="contact__l2">{t('contact.title2')}</span>
     </h2>
 
-    <p class="contact__lead">{t('contact.lead')}</p>
+    <p class="contact__lead" data-reveal>{t('contact.lead')}</p>
 
     <ul class="contact__links">
-      <li>
-        <span class="mono contact__k">{t('contact.email')}</span>
-        <a class="contact__v" href={`mailto:${contact.email}`}>{contact.email}</a>
+      <li class="contact__email">
+        <span class="ann contact__k">{t('contact.email')}</span>
+        <a class="contact__v contact__v--big" href={`mailto:${contact.email}`}>{contact.email}</a>
+        <span class="contact__thread" aria-hidden="true" data-contact-thread></span>
       </li>
       <li>
-        <span class="mono contact__k">{t('contact.linkedin')}</span>
+        <span class="ann contact__k">{t('contact.linkedin')}</span>
         <a class="contact__v" href={contact.linkedin} rel="noopener me" target="_blank">{contact.linkedinLabel} <span aria-hidden="true">↗</span></a>
       </li>
     </ul>
@@ -41,7 +39,15 @@ const year = new Date().getFullYear();
 
 <style>
   .contact {
-    --bg: var(--c-ink);
+    --bg: var(--c-denim-900);
+    overflow: clip;
+  }
+  .contact__field {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
   }
   .contact__wrap {
     min-height: 100svh;
@@ -55,70 +61,75 @@ const year = new Date().getFullYear();
     display: flex;
     flex-direction: column;
     font-family: var(--font-display);
-    font-size: clamp(3.25rem, 1rem + 10vw, 11rem);
-    line-height: 0.86;
-    letter-spacing: -0.04em;
-    font-weight: 560;
-    user-select: none;
-    -webkit-user-select: none;
+    font-size: clamp(3rem, 1rem + 7vw, 8rem);
+    line-height: 0.98;
+    letter-spacing: -0.03em;
+    font-weight: 400;
   }
   .contact__l2 {
     font-style: italic;
     font-weight: 300;
     color: var(--c-denim-300);
-    padding-left: 0.6em;
   }
   .contact__lead {
-    font-size: var(--fs-lg);
-    font-family: var(--font-display);
-    font-weight: 380;
+    font-size: var(--fs-md);
     color: var(--fg-muted);
-    max-width: 30ch;
+    max-width: 44ch;
   }
   .contact__links {
     list-style: none;
     padding: 0;
-    border-top: var(--stitch);
+    display: grid;
+    gap: var(--sp-6);
+    margin-top: var(--sp-5);
   }
   .contact__links li {
+    position: relative;
     display: grid;
-    grid-template-columns: 8rem 1fr;
-    gap: var(--sp-4);
-    align-items: baseline;
-    padding-block: var(--sp-4);
-    border-bottom: 1px solid var(--line);
+    gap: var(--sp-2);
   }
   .contact__k {
-    font-size: var(--fs-xs);
-    letter-spacing: var(--track-label);
     text-transform: uppercase;
-    color: var(--accent);
+    letter-spacing: 0.14em;
   }
   .contact__v {
-    font-family: var(--font-display);
-    font-size: var(--fs-lg);
+    width: fit-content;
+    font-family: var(--font-mono);
+    font-size: var(--fs-mono-sm);
+    letter-spacing: 0.03em;
     text-decoration: none;
     overflow-wrap: anywhere;
-    background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
-    transition: background-size var(--dur-base) var(--ease-out);
   }
-  .contact__v:hover,
-  .contact__v:focus-visible {
-    background-size: 100% 1px;
+  .contact__v--big {
+    font-family: var(--font-display);
+    font-weight: 300;
+    font-size: clamp(1.6rem, 0.6rem + 4.6vw, 4.75rem);
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .contact__v:hover {
+      text-decoration: underline;
+    }
+  }
+  /* All the lines of the field end in this single thread */
+  .contact__thread {
+    display: block;
+    width: 100vw;
+    height: var(--thread-w);
+    margin-left: calc(-1 * var(--gutter));
+    background: var(--c-thread);
+    transform-origin: left center;
   }
   .contact__foot {
+    position: relative;
+    z-index: var(--z-content);
     display: flex;
     justify-content: space-between;
     gap: var(--sp-4);
     padding-block: var(--sp-5);
-    font-size: var(--fs-xs);
+    font-size: var(--fs-mono);
     color: var(--fg-muted);
     border-top: 1px solid var(--line);
-  }
-  @media (max-width: 640px) {
-    .contact__links li {
-      grid-template-columns: 1fr;
-      gap: var(--sp-1);
-    }
   }
 </style>

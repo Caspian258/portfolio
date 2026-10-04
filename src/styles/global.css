@@ -1,6 +1,31 @@
 @import './tokens.css';
 
-/* — Reset mínimo — */
+/* Martian Mono (OFL), self-hosted subset: Latin, punctuation and arrows */
+@font-face {
+  font-family: 'Martian Mono';
+  src: url('../assets/fonts/martian-mono.woff2') format('woff2');
+  font-weight: 300 600;
+  font-style: normal;
+  font-display: swap;
+}
+/*
+  Martian Mono has no ✓ ▷ ▶ ‖. These four characters come from Noto
+  (OFL) through a tiny fallback family, so they stay real text.
+*/
+@font-face {
+  font-family: 'Mono Symbols';
+  src: url('../assets/fonts/mono-symbols-a.woff2') format('woff2');
+  unicode-range: U+2713, U+25B6, U+25B7;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Mono Symbols';
+  src: url('../assets/fonts/mono-symbols-b.woff2') format('woff2');
+  unicode-range: U+2016;
+  font-display: swap;
+}
+
+/* Minimal reset */
 *,
 *::before,
 *::after {
@@ -35,7 +60,8 @@ body {
 }
 img,
 svg,
-video {
+video,
+canvas {
   display: block;
   max-width: 100%;
 }
@@ -65,7 +91,7 @@ a {
   color: var(--c-paper);
 }
 
-/* — Utilidades — */
+/* Utilities */
 .sr-only {
   position: absolute !important;
   width: 1px;
@@ -86,7 +112,7 @@ a {
   background: var(--c-ink);
   color: var(--c-paper);
   font-family: var(--font-mono);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-mono-sm);
   transform: translateY(-200%);
 }
 .skip-link:focus {
@@ -94,19 +120,21 @@ a {
 }
 
 .wrap {
+  position: relative;
+  z-index: var(--z-content);
   width: 100%;
   max-width: var(--max-w);
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
 
-/* Etiqueta de sección: "02 — Sobre mí" con costura */
+/* Small mono label (dialogs and project pages) */
 .label {
   display: flex;
   align-items: center;
   gap: var(--sp-3);
   font-family: var(--font-mono);
-  font-size: var(--fs-xs);
+  font-size: var(--fs-mono);
   font-weight: 500;
   letter-spacing: var(--track-label);
   text-transform: uppercase;
@@ -118,18 +146,28 @@ a {
 .label__stitch {
   flex: 1;
   height: 0;
-  border-top: 1.5px dashed var(--accent);
+  border-top: var(--thread-w) solid var(--thread);
   opacity: 0.7;
   transform-origin: left center;
 }
 
+/* Technical annotation: small mono text in thread color */
+.ann {
+  font-family: var(--font-mono);
+  font-size: var(--fs-mono);
+  letter-spacing: 0.06em;
+  color: var(--thread);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
 .display {
   font-family: var(--font-display);
-  font-weight: 560;
+  font-weight: 420;
   font-size: var(--fs-xxl);
-  line-height: var(--lh-tight);
+  line-height: 0.95;
   letter-spacing: var(--track-display);
-  font-variation-settings: 'SOFT' 50, 'WONK' 0;
+  text-wrap: balance;
 }
 .display em {
   font-style: italic;
@@ -138,56 +176,60 @@ a {
 
 .mono {
   font-family: var(--font-mono);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-mono-sm);
 }
 
-/* Máscara para revelar líneas (se anima con GSAP) */
-.reveal-line {
-  display: block;
-  overflow: hidden;
-  padding-bottom: 0.08em;
-  margin-bottom: -0.08em;
-}
-.reveal-line > span {
-  display: inline-block;
+/* Section heading line mask (animated with SplitText) */
+.split-mask {
+  overflow: clip;
+  padding-bottom: 0.1em;
+  margin-bottom: -0.1em;
 }
 
-/* Escena: bloque de color a pantalla completa */
+/* Scene: full-bleed color block */
 .scene {
   position: relative;
   background: var(--bg);
   color: var(--fg);
 }
 
-/* Botón "Ver detalle" */
+/* Pill button */
 .btn {
   display: inline-flex;
   align-items: center;
   gap: var(--sp-3);
-  padding: 0.7em 1.15em;
+  min-height: 44px;
+  padding: 0.7em 1.2em;
   border: 1px solid currentColor;
   border-radius: 999px;
   font-family: var(--font-mono);
-  font-size: var(--fs-sm);
-  letter-spacing: 0.02em;
+  font-size: var(--fs-mono-sm);
+  letter-spacing: 0.04em;
   text-decoration: none;
+  white-space: nowrap;
   transition:
-    background var(--dur-fast) var(--ease-out),
-    color var(--dur-fast) var(--ease-out);
+    background-color var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out),
+    transform var(--dur-fast) var(--ease-out);
 }
-.btn:hover {
-  background: var(--fg);
-  color: var(--bg);
+.btn:active {
+  transform: scale(0.97);
+}
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover {
+    background: var(--fg);
+    color: var(--bg);
+  }
+  .btn:hover .btn__plus {
+    transform: rotate(90deg);
+  }
 }
 .btn__plus {
   display: inline-block;
   transition: transform var(--dur-base) var(--ease-out);
 }
-.btn:hover .btn__plus {
-  transform: rotate(90deg);
-}
 
-/* — Desplegables (details) — */
+/* Expandable <details> */
 .x-expand > summary {
   list-style: none;
   cursor: pointer;
@@ -207,7 +249,7 @@ html.lenis body {
 .lenis.lenis-smooth {
   scroll-behavior: auto !important;
 }
-/* hidden (no clip) para que el navegador conserve la posición de scroll */
+/* hidden (not clip) so the browser keeps the scroll position */
 .lenis.lenis-stopped {
   overflow: hidden;
 }

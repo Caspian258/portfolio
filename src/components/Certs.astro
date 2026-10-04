@@ -9,14 +9,9 @@ const statusKey = { done: 'status.done', progress: 'status.progress', next: 'sta
 
 <section id="certificaciones" class="certs scene" data-section data-title={t('sec.certs')} data-theme="light">
   <div class="wrap certs__wrap">
-    <p class="label" data-reveal-label>
-      <span class="label__num">05</span><span>{t('sec.certs')}</span><span class="label__stitch"></span>
-    </p>
     <div class="certs__head">
-      <h2 class="display" data-reveal-lines>
-        <span class="reveal-line"><span>{t('sec.certs')}</span></span>
-      </h2>
-      <p class="certs__lead">{t('certs.lead')}</p>
+      <h2 class="display certs__title" data-split>{t('sec.certs')}</h2>
+      <p class="certs__lead" data-reveal>{t('certs.lead')}</p>
     </div>
 
     <ul class="certs__list">
@@ -29,7 +24,7 @@ const statusKey = { done: 'status.done', progress: 'status.progress', next: 'sta
                 <span class="certs__name">{c.name}</span>
                 <span class="certs__issuer mono">{c.issuer}</span>
                 <span class="certs__status mono">
-                  <span class="certs__dot" aria-hidden="true" />
+                  <span class="certs__mark" aria-hidden="true">{c.status === 'done' ? '✓' : '▷'}</span>
                   {t(statusKey[c.status])}
                   {c.year && ` · ${c.year}`}
                 </span>
@@ -90,15 +85,16 @@ const statusKey = { done: 'status.done', progress: 'status.progress', next: 'sta
     gap: var(--sp-4);
     align-items: baseline;
     padding-block: var(--sp-5);
-    transition: background var(--dur-fast) var(--ease-out), padding var(--dur-base) var(--ease-out);
+    transition: background-color var(--dur-fast) var(--ease-out);
   }
-  .certs__sum:hover {
-    padding-left: var(--sp-3);
-    background: linear-gradient(90deg, var(--c-paper-2), transparent);
+  @media (hover: hover) and (pointer: fine) {
+    .certs__sum:hover {
+      background-color: var(--c-paper-2);
+    }
   }
   .certs__idx {
     color: var(--fg-muted);
-    font-size: var(--fs-xs);
+    font-size: var(--fs-mono);
   }
   .certs__name {
     font-family: var(--font-display);
@@ -109,7 +105,7 @@ const statusKey = { done: 'status.done', progress: 'status.progress', next: 'sta
   }
   .certs__issuer,
   .certs__status {
-    font-size: var(--fs-xs);
+    font-size: var(--fs-mono);
     color: var(--fg-muted);
   }
   .certs__status {
@@ -117,14 +113,13 @@ const statusKey = { done: 'status.done', progress: 'status.progress', next: 'sta
     align-items: center;
     gap: var(--sp-2);
   }
-  .certs__dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    border: 1.5px solid var(--c-thread-dark);
+  .certs__title {
+    font-size: var(--fs-xl);
+    font-weight: 400;
   }
-  .is-done .certs__dot {
-    background: var(--c-thread-dark);
+  .certs__mark {
+    color: var(--c-thread-dark);
+    font-size: 1.1em;
   }
   .certs__toggle {
     justify-self: end;
