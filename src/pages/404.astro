@@ -1,0 +1,32 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base lang="es" alternates={{ es: '/', en: '/en/' }} title="404 — beautiful engineering">
+  <main id="contenido" class="nf scene scene--dark">
+    <p class="label"><span class="label__num">404</span><span>Página no encontrada · Page not found</span></p>
+    <h1 class="display">Aquí no hay <em>costura.</em></h1>
+    <p class="nf__links">
+      <a class="btn" href="/">Volver al inicio</a>
+      <a class="btn" href="/en/" lang="en">Back home</a>
+    </p>
+  </main>
+</Base>
+
+<style>
+  .nf {
+    min-height: 100svh;
+    display: grid;
+    align-content: center;
+    gap: var(--sp-6);
+    padding: var(--gutter);
+  }
+  .nf em {
+    color: var(--c-denim-300);
+  }
+  .nf__links {
+    display: flex;
+    gap: var(--sp-3);
+    flex-wrap: wrap;
+  }
+</style>

@@ -1,0 +1,12 @@
+---
+import ProjectPage from '../../components/ProjectPage.astro';
+import { getProjects } from '../../lib/projects';
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+  return projects.map((project) => ({ params: { slug: project.id }, props: { project } }));
+}
+const { project } = Astro.props;
+---
+
+<ProjectPage lang="es" project={project} />

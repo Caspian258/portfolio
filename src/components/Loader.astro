@@ -1,0 +1,88 @@
+---
+import { type Lang, useT } from '../i18n/ui';
+interface Props { lang: Lang }
+const t = useT(Astro.props.lang);
+---
+
+<div class="loader" data-loader role="status" aria-live="polite">
+  <span class="sr-only">{t('loader.label')}</span>
+  <div class="loader__inner" aria-hidden="true">
+    <p class="loader__name">
+      <span class="loader__line"><span>beautiful</span></span>
+      <span class="loader__line"><span><em>engineering</em></span></span>
+    </p>
+    <div class="loader__meta">
+      <span>Mariano Villagómez</span>
+      <span class="loader__pct"><span data-loader-pct>000</span>%</span>
+    </div>
+    <div class="loader__thread"><span data-loader-bar></span></div>
+  </div>
+</div>
+
+<style>
+  .loader {
+    display: none;
+  }
+  :global(.js) .loader {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-loader);
+    display: flex;
+    align-items: flex-end;
+    background: var(--c-denim-900);
+    color: var(--c-paper);
+    padding: var(--gutter);
+  }
+  :global(.js.is-loaded) .loader {
+    display: none;
+  }
+  .loader__inner {
+    width: 100%;
+  }
+  .loader__name {
+    font-family: var(--font-display);
+    font-weight: 560;
+    font-size: clamp(3rem, 1rem + 9vw, 10rem);
+    line-height: 0.88;
+    letter-spacing: var(--track-display);
+  }
+  .loader__name em {
+    font-style: italic;
+    font-weight: 300;
+    color: var(--c-denim-300);
+  }
+  .loader__line {
+    display: block;
+    overflow: hidden;
+    padding-bottom: 0.2em;
+    margin-bottom: -0.14em;
+  }
+  .loader__line > span {
+    display: inline-block;
+  }
+  .loader__meta {
+    display: flex;
+    justify-content: space-between;
+    margin-top: var(--sp-6);
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    letter-spacing: 0.04em;
+    color: var(--c-denim-300);
+  }
+  .loader__pct {
+    color: var(--c-paper);
+    font-variant-numeric: tabular-nums;
+  }
+  .loader__thread {
+    margin-top: var(--sp-3);
+    height: 2px;
+    background: color-mix(in srgb, var(--c-paper) 12%, transparent);
+  }
+  .loader__thread span {
+    display: block;
+    height: 100%;
+    background: repeating-linear-gradient(90deg, var(--c-thread) 0 10px, transparent 10px 16px);
+    transform: scaleX(0);
+    transform-origin: left center;
+  }
+</style>

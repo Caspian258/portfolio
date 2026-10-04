@@ -1,0 +1,41 @@
+---
+/**
+ * Divide un texto en letras para animarlas (entrada, cursor que empuja).
+ * Los lectores de pantalla leen el texto completo; las letras son decorativas.
+ */
+interface Props {
+  text: string;
+  class?: string;
+}
+const { text, class: className } = Astro.props;
+const words = text.split(' ');
+---
+
+<span class:list={['letters', className]}>
+  <span class="sr-only">{text}</span>
+  <span class="letters__visual" aria-hidden="true">
+    {
+      words.map((word, wi) => (
+        <>
+          <span class="letters__word">
+            {[...word].map((ch) => (
+              <span class="ch">{ch}</span>
+            ))}
+          </span>
+          {wi < words.length - 1 && ' '}
+        </>
+      ))
+    }
+  </span>
+</span>
+
+<style>
+  .letters__word {
+    display: inline-block;
+    white-space: nowrap;
+  }
+  .letters :global(.ch) {
+    display: inline-block;
+    will-change: transform;
+  }
+</style>

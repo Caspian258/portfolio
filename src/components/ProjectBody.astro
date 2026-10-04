@@ -1,0 +1,145 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { type Lang, useT } from '../i18n/ui';
+interface Props {
+  project: CollectionEntry<'proyectos'>;
+  lang: Lang;
+  /** En el diálogo los títulos son h4; en la página completa, h2. */
+  compact?: boolean;
+}
+const { project, lang, compact = false } = Astro.props;
+const t = useT(lang);
+const d = project.data[lang];
+const H = compact ? 'h4' : 'h2';
+---
+
+<div class:list={['pb', { 'pb--compact': compact }]}>
+  <section class="pb__block">
+    <H class="pb__h">{t('projects.problem')}</H>
+    <p>{d.problema}</p>
+  </section>
+
+  <section class="pb__block">
+    <H class="pb__h">{t('projects.how')}</H>
+    <ol class="pb__steps">
+      {d.solucion.map((s) => <li>{s}</li>)}
+    </ol>
+  </section>
+
+  <section class="pb__block">
+    <H class="pb__h">{t('projects.results')}</H>
+    {
+      project.data.metricas.length > 0 && (
+        <dl class="pb__metrics">
+          {project.data.metricas.map((m) => (
+            <div>
+              <dt>{m[lang]}</dt>
+              <dd>{m.valor}</dd>
+            </div>
+          ))}
+        </dl>
+      )
+    }
+    <p>{d.resultados}</p>
+  </section>
+
+  {
+    d.limitaciones.length > 0 && (
+      <section class="pb__block">
+        <H class="pb__h">{t('projects.limits')}</H>
+        <ul class="pb__list">
+          {d.limitaciones.map((s) => <li>{s}</li>)}
+        </ul>
+      </section>
+    )
+  }
+
+  {
+    d.aprendizajes.length > 0 && (
+      <section class="pb__block">
+        <H class="pb__h">{t('projects.learned')}</H>
+        <ul class="pb__list">
+          {d.aprendizajes.map((s) => <li>{s}</li>)}
+        </ul>
+      </section>
+    )
+  }
+
+  <section class="pb__block">
+    <H class="pb__h">{t('projects.stack')}</H>
+    <p class="mono">{project.data.stack.join(' · ')}</p>
+  </section>
+</div>
+
+<style>
+  .pb {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--sp-6) var(--sp-7);
+  }
+  .pb__block {
+    display: grid;
+    gap: var(--sp-3);
+    align-content: start;
+  }
+  .pb__block:nth-child(3) {
+    grid-column: 1 / -1;
+  }
+  .pb__h {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    font-weight: 500;
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .pb p,
+  .pb li {
+    max-width: var(--measure);
+  }
+  .pb__steps,
+  .pb__list {
+    display: grid;
+    gap: var(--sp-2);
+    padding-left: 1.2em;
+  }
+  .pb__steps li::marker {
+    font-family: var(--font-mono);
+    color: var(--fg-muted);
+  }
+  .pb__list li::marker {
+    color: var(--accent);
+  }
+  .pb__metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    gap: var(--sp-4);
+    margin-bottom: var(--sp-3);
+  }
+  .pb__metrics div {
+    display: flex;
+    flex-direction: column-reverse;
+    justify-content: flex-end;
+    gap: var(--sp-1);
+    padding-top: var(--sp-3);
+    border-top: 1.5px dashed var(--accent);
+  }
+  .pb__metrics dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-xl);
+    font-weight: 560;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .pb__metrics dt {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    color: var(--fg-muted);
+  }
+  @media (max-width: 767px) {
+    .pb {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

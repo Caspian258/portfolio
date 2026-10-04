@@ -1,0 +1,157 @@
+---
+import { skills } from '../data/site';
+import { type Lang, useT } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useT(lang);
+---
+
+<section id="habilidades" class="skills scene" data-section data-title={t('sec.skills')} data-theme="light">
+  <div class="wrap skills__head">
+    <p class="label" data-reveal-label>
+      <span class="label__num">06</span><span>{t('sec.skills')}</span><span class="label__stitch"></span>
+    </p>
+    <div class="skills__intro">
+      <h2 class="display" data-reveal-lines>
+        <span class="reveal-line"><span>{t('sec.skills')}</span></span>
+      </h2>
+      <p class="skills__lead">{t('skills.lead')}</p>
+    </div>
+  </div>
+
+  <ul class="skills__bands">
+    {
+      skills.map((s, i) => {
+        const run = [s.area[lang], ...s.items.map((it) => it[lang])];
+        return (
+          <li class="band" data-band data-dir={i % 2 === 0 ? '1' : '-1'}>
+            <details class="x-expand" data-expand>
+              <summary class="band__sum">
+                <span class="sr-only">{s.area[lang]}</span>
+                <span class="band__marquee" aria-hidden="true">
+                  <span class="band__track" data-band-track>
+                    {[0, 1].map(() => (
+                      <span class="band__run">
+                        {run.map((txt, k) => (
+                          <>
+                            <span class={k === 0 ? 'band__area' : 'band__item'}>{txt}</span>
+                            <span class="band__sep">✕</span>
+                          </>
+                        ))}
+                      </span>
+                    ))}
+                  </span>
+                </span>
+              </summary>
+              <div class="x-expand__body">
+                <div class="wrap band__body">
+                  <ul>
+                    {s.items.map((it) => (
+                      <li>{it[lang]}</li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </details>
+          </li>
+        );
+      })
+    }
+  </ul>
+</section>
+
+<style>
+  .skills {
+    --bg: var(--c-paper-2);
+    padding-block: var(--sp-9) var(--sp-8);
+    overflow: clip;
+  }
+  .skills__head {
+    display: grid;
+    gap: var(--sp-6);
+    margin-bottom: var(--sp-7);
+  }
+  .skills__intro {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--sp-5);
+  }
+  .skills__lead {
+    color: var(--fg-muted);
+    max-width: 30ch;
+  }
+  .skills__bands {
+    list-style: none;
+    padding: 0;
+    border-top: var(--stitch-dark);
+  }
+  .band {
+    border-bottom: var(--stitch-dark);
+  }
+  .band__sum {
+    display: block;
+    padding-block: var(--sp-4);
+    overflow: hidden;
+    transition: background var(--dur-base) var(--ease-out), color var(--dur-base) var(--ease-out);
+  }
+  .band__sum:hover,
+  .band details[open] .band__sum {
+    background: var(--c-denim-900);
+    color: var(--c-paper);
+  }
+  .band__marquee {
+    display: block;
+    white-space: nowrap;
+  }
+  .band__track {
+    display: inline-flex;
+    will-change: transform;
+  }
+  .band__run {
+    display: inline-flex;
+    align-items: baseline;
+    gap: var(--sp-5);
+    padding-right: var(--sp-5);
+  }
+  .band__area {
+    font-family: var(--font-display);
+    font-size: var(--fs-xl);
+    font-weight: 560;
+    letter-spacing: var(--track-display);
+    line-height: 1;
+  }
+  .band__item {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: var(--fs-xl);
+    line-height: 1;
+    opacity: 0.75;
+  }
+  .band__sep {
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    color: var(--accent);
+  }
+  .band details[open] .band__sep,
+  .band__sum:hover .band__sep {
+    color: var(--c-thread);
+  }
+  .band__body ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    padding: var(--sp-5) 0;
+    list-style: none;
+  }
+  .band__body li {
+    font-family: var(--font-mono);
+    font-size: var(--fs-sm);
+    padding: 0.35em 0.8em;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    background: var(--c-paper);
+  }
+</style>

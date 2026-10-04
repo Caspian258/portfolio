@@ -1,0 +1,78 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Base from '../layouts/Base.astro';
+import Nav from './Nav.astro';
+import ProjectBody from './ProjectBody.astro';
+import { type Lang, useT, homePath, projectPath } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  project: CollectionEntry<'proyectos'>;
+}
+const { lang, project } = Astro.props;
+const t = useT(lang);
+const d = project.data[lang];
+const alternates = { es: projectPath('es', project.id), en: projectPath('en', project.id) };
+const fmt = new Intl.DateTimeFormat(lang === 'es' ? 'es-MX' : 'en-US', { year: 'numeric', month: 'long' });
+---
+
+<Base lang={lang} alternates={alternates} title={`${d.titulo} — beautiful engineering`} description={d.resumen}>
+  <Nav lang={lang} altHref={alternates[lang === 'es' ? 'en' : 'es']} inner />
+  <main id="contenido" class="pp">
+    <header class="pp__hero scene scene--dark">
+      <div class="wrap pp__hero-in">
+        <a class="pp__back mono" href={`${homePath(lang)}#proyectos`}>← {t('projects.back')}</a>
+        <p class="label">
+          <span class="label__num">{project.data.codigo}</span>
+          <span><time datetime={project.data.fecha.toISOString()}>{fmt.format(project.data.fecha)}</time></span>
+          <span class="label__stitch"></span>
+        </p>
+        <h1 class="display pp__title">{d.titulo}</h1>
+        <p class="pp__sum">{d.resumen}</p>
+        <p class="pp__links">
+          <a class="btn" href={project.data.repo} rel="noopener" target="_blank">{t('projects.repo')} <span aria-hidden="true">↗</span></a>
+        </p>
+      </div>
+    </header>
+    <div class="wrap pp__body">
+      <ProjectBody project={project} lang={lang} />
+    </div>
+  </main>
+</Base>
+
+<style>
+  .pp__hero-in {
+    padding-block: calc(var(--sp-9) + var(--sp-4)) var(--sp-8);
+    display: grid;
+    gap: var(--sp-6);
+  }
+  .pp__back {
+    font-size: var(--fs-xs);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--fg-muted);
+  }
+  .pp__back:hover {
+    color: var(--fg);
+  }
+  .pp__title {
+    font-size: var(--fs-xxl);
+    max-width: 14ch;
+  }
+  .pp__sum {
+    font-family: var(--font-display);
+    font-size: var(--fs-lg);
+    font-weight: 380;
+    line-height: 1.3;
+    color: var(--fg-muted);
+    max-width: 40ch;
+  }
+  .pp__body {
+    padding-block: var(--sp-8) var(--sp-9);
+  }
+</style>
+
+<script>
+  import '../scripts/inner';
+</script>

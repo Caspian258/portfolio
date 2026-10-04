@@ -1,0 +1,330 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import { type Lang, useT, projectPath } from '../i18n/ui';
+import ProjectBody from './ProjectBody.astro';
+
+interface Props {
+  lang: Lang;
+  projects: CollectionEntry<'proyectos'>[];
+}
+const { lang, projects } = Astro.props;
+const t = useT(lang);
+const count = String(projects.length).padStart(2, '0');
+---
+
+<section id="proyectos" class="projects scene" data-section data-title={t('sec.projects')} data-theme="light">
+  <div class="projects__pin" data-hscroll>
+    <div class="projects__track" data-hscroll-track>
+      <div class="projects__intro panel">
+        <p class="label" data-reveal-label>
+          <span class="label__num">03</span><span>{t('sec.projects')}</span><span class="label__stitch"></span>
+        </p>
+        <h2 class="display projects__title" data-reveal-lines>
+          <span class="reveal-line"><span>{t('sec.projects')}</span></span>
+          <span class="reveal-line"><span><em>({count})</em></span></span>
+        </h2>
+        <p class="projects__lead">{t('projects.lead')}</p>
+      </div>
+
+      {
+        projects.length === 0 && (
+          <div class="panel projects__empty">
+            <p>{t('projects.empty')}</p>
+          </div>
+        )
+      }
+
+      {
+        projects.map((p) => {
+          const d = p.data[lang];
+          return (
+            <article class="card panel" aria-labelledby={`card-${p.id}`}>
+              <header class="card__head">
+                <span class="card__code">{p.data.codigo}</span>
+                {!p.data.aprobado && <span class="card__draft">{t('projects.draft')}</span>}
+              </header>
+              <h3 class="card__title" id={`card-${p.id}`}>
+                {d.titulo}
+              </h3>
+              <p class="card__sum">{d.resumen}</p>
+              {p.data.metricas.length > 0 && (
+                <dl class="card__metrics">
+                  {p.data.metricas.map((m) => (
+                    <div>
+                      <dt>{m[lang]}</dt>
+                      <dd>{m.valor}</dd>
+                    </div>
+                  ))}
+                </dl>
+              )}
+              <footer class="card__foot">
+                <ul class="card__stack" aria-label={t('projects.stack')}>
+                  {p.data.stack.map((s) => (
+                    <li>{s}</li>
+                  ))}
+                </ul>
+                <button class="btn" type="button" data-dialog-open={`dlg-${p.id}`} aria-haspopup="dialog">
+                  {t('projects.detail')} <span class="btn__plus" aria-hidden="true">+</span>
+                </button>
+              </footer>
+
+              <dialog class="dlg scene scene--dark" data-lenis-prevent id={`dlg-${p.id}`} aria-labelledby={`dlg-title-${p.id}`} data-dialog>
+                <div class="dlg__inner">
+                  <div class="dlg__bar">
+                    <span class="label">
+                      <span class="label__num">{p.data.codigo}</span>
+                      <span>{t('sec.projects')}</span>
+                    </span>
+                    <button class="btn" type="button" data-dialog-close>
+                      {t('projects.close')} <span aria-hidden="true">×</span>
+                    </button>
+                  </div>
+                  <h3 class="display dlg__title" id={`dlg-title-${p.id}`}>
+                    {d.titulo}
+                  </h3>
+                  <ProjectBody project={p} lang={lang} compact />
+                  <p class="dlg__links">
+                    <a class="btn" href={projectPath(lang, p.id)}>
+                      {t('projects.page')} <span aria-hidden="true">→</span>
+                    </a>
+                    <a class="btn" href={p.data.repo} rel="noopener" target="_blank">
+                      {t('projects.repo')} <span aria-hidden="true">↗</span>
+                    </a>
+                  </p>
+                </div>
+              </dialog>
+            </article>
+          );
+        })
+      }
+
+      <div class="panel projects__next">
+        <span class="projects__next-line" aria-hidden="true"></span>
+        <p>{t('projects.next')}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .projects {
+    --bg: var(--c-paper);
+    overflow: clip;
+  }
+  .projects__pin {
+    min-height: 100svh;
+    display: flex;
+    align-items: center;
+    padding-block: var(--sp-9) var(--sp-7);
+  }
+  .projects__track {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    gap: var(--sp-6);
+    padding-inline: var(--gutter);
+    will-change: transform;
+  }
+  /* Recorrido horizontal: solo cuando el script lo activa */
+  .is-hscroll .projects__track {
+    flex-wrap: nowrap;
+  }
+  .panel {
+    flex: 0 0 auto;
+  }
+  .projects__intro {
+    width: min(34rem, 82vw);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-6);
+    justify-content: center;
+  }
+  .projects__title em {
+    font-weight: 300;
+    color: var(--c-denim-500);
+  }
+  .projects__lead {
+    max-width: 34ch;
+    color: var(--fg-muted);
+  }
+  .projects__empty,
+  .projects__next {
+    width: min(26rem, 80vw);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--sp-5);
+    font-family: var(--font-display);
+    font-size: var(--fs-lg);
+    line-height: 1.25;
+    color: var(--fg-muted);
+  }
+  .projects__next-line {
+    width: 100%;
+    border-top: var(--stitch-dark);
+  }
+
+  .card {
+    width: min(46rem, 88vw);
+    min-height: min(70svh, 40rem);
+    display: flex;
+    flex-direction: column;
+    gap: var(--sp-5);
+    padding: var(--sp-6);
+    background: var(--c-paper-2);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-m);
+    position: relative;
+  }
+  .card::after {
+    /* costura interior */
+    content: '';
+    position: absolute;
+    inset: 10px;
+    border: 1.5px dashed color-mix(in srgb, var(--c-thread-dark) 45%, transparent);
+    border-radius: 4px;
+    pointer-events: none;
+  }
+  .card__head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+  }
+  .card__code {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-weight: 300;
+    font-size: var(--fs-xl);
+    line-height: 1;
+    color: var(--c-denim-500);
+  }
+  .card__draft {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    letter-spacing: var(--track-label);
+    text-transform: uppercase;
+    padding: 0.3em 0.7em;
+    border: 1px dashed var(--c-thread-dark);
+    color: var(--c-thread-dark);
+    border-radius: 999px;
+  }
+  .card__title {
+    font-family: var(--font-display);
+    font-weight: 560;
+    font-size: var(--fs-xl);
+    line-height: 0.95;
+    letter-spacing: var(--track-display);
+  }
+  .card__sum {
+    max-width: 48ch;
+    color: var(--fg-muted);
+  }
+  .card__metrics {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+    gap: var(--sp-4);
+    margin-top: auto;
+    padding-top: var(--sp-5);
+    border-top: 1px solid var(--line);
+  }
+  .card__metrics div {
+    display: flex;
+    flex-direction: column-reverse;
+    gap: var(--sp-1);
+  }
+  .card__metrics dd {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: var(--fs-lg);
+    font-weight: 560;
+    letter-spacing: -0.02em;
+    font-variant-numeric: tabular-nums;
+  }
+  .card__metrics dt {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    color: var(--fg-muted);
+    line-height: 1.35;
+  }
+  .card__foot {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--sp-4);
+    position: relative;
+    z-index: 1;
+  }
+  .card__stack {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-2);
+    padding: 0;
+    list-style: none;
+  }
+  .card__stack li {
+    font-family: var(--font-mono);
+    font-size: var(--fs-xs);
+    padding: 0.25em 0.6em;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+  }
+
+  /* Diálogo de detalle */
+  .dlg {
+    position: fixed;
+    inset: 0;
+    width: min(64rem, 100vw - 2 * var(--gutter));
+    max-height: calc(100svh - 2 * var(--gutter));
+    margin: auto;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-m);
+    overflow: auto;
+    overscroll-behavior: contain;
+  }
+  .dlg::backdrop {
+    background: color-mix(in srgb, var(--c-ink) 70%, transparent);
+  }
+  .dlg__inner {
+    padding: var(--sp-6);
+    display: grid;
+    gap: var(--sp-6);
+  }
+  .dlg__bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--sp-4);
+  }
+  .dlg__title {
+    font-size: var(--fs-xl);
+  }
+  .dlg__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--sp-3);
+  }
+  @media (max-width: 767px) {
+    .projects__pin {
+      padding-block: var(--sp-8);
+    }
+    .projects__track {
+      flex-direction: column;
+      gap: var(--sp-7);
+    }
+    .projects__intro,
+    .card,
+    .projects__empty,
+    .projects__next {
+      width: 100%;
+    }
+    .card {
+      min-height: 0;
+      padding: var(--sp-5);
+    }
+    .dlg__inner {
+      padding: var(--sp-5);
+    }
+  }
+</style>

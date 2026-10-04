@@ -1,0 +1,36 @@
+---
+import Base from '../layouts/Base.astro';
+import Loader from './Loader.astro';
+import Nav from './Nav.astro';
+import Hero from './Hero.astro';
+import About from './About.astro';
+import Projects from './Projects.astro';
+import Route from './Route.astro';
+import Certs from './Certs.astro';
+import Skills from './Skills.astro';
+import Contact from './Contact.astro';
+import { type Lang, homePath } from '../i18n/ui';
+import { getProjects } from '../lib/projects';
+
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const projects = await getProjects();
+const alternates = { es: homePath('es'), en: homePath('en') };
+---
+
+<Base lang={lang} alternates={alternates}>
+  <Loader lang={lang} />
+  <Nav lang={lang} altHref={alternates[lang === 'es' ? 'en' : 'es']} />
+  <main id="contenido">
+    <Hero lang={lang} />
+    <About lang={lang} />
+    <Projects lang={lang} projects={projects} />
+    <Route lang={lang} />
+    <Certs lang={lang} />
+    <Skills lang={lang} />
+    <Contact lang={lang} />
+  </main>
+  <script>
+    import '../scripts/main';
+  </script>
+</Base>

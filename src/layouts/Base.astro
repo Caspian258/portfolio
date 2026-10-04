@@ -1,0 +1,50 @@
+---
+import '@fontsource-variable/fraunces/wght.css';
+import '@fontsource-variable/fraunces/wght-italic.css';
+import '@fontsource-variable/schibsted-grotesk';
+import '@fontsource/ibm-plex-mono/400.css';
+import '@fontsource/ibm-plex-mono/500.css';
+import '../styles/global.css';
+import { type Lang, useT } from '../i18n/ui';
+
+interface Props {
+  lang: Lang;
+  title?: string;
+  description?: string;
+  /** Rutas equivalentes en cada idioma, para hreflang y el selector. */
+  alternates: Record<Lang, string>;
+}
+
+const { lang, title, description, alternates } = Astro.props;
+const t = useT(lang);
+const pageTitle = title ?? t('meta.title');
+const pageDesc = description ?? t('meta.description');
+const site = Astro.site;
+const abs = (p: string) => (site ? new URL(p, site).href : p);
+---
+
+<!doctype html>
+<html lang={lang}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content={pageDesc} />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#121d33" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="alternate" hreflang="es" href={abs(alternates.es)} />
+    <link rel="alternate" hreflang="en" href={abs(alternates.en)} />
+    <link rel="alternate" hreflang="x-default" href={abs(alternates.es)} />
+    {site && <link rel="canonical" href={abs(alternates[lang])} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={pageTitle} />
+    <meta property="og:description" content={pageDesc} />
+    <meta property="og:locale" content={lang === 'es' ? 'es_MX' : 'en_US'} />
+    <script is:inline>document.documentElement.classList.add('js');</script>
+  </head>
+  <body>
+    <a class="skip-link" href="#contenido">{t('skip')}</a>
+    <slot />
+  </body>
+</html>
