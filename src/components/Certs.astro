@@ -1,0 +1,160 @@
+---
+import { certs } from '../data/site';
+import { type Lang, useT } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useT(lang);
+const statusKey = { done: 'status.done', progress: 'status.progress', next: 'status.next', later: 'status.later' } as const;
+---
+
+<section id="certificaciones" class="certs scene" data-section data-title={t('sec.certs')} data-theme="light">
+  <div class="wrap certs__wrap">
+    <p class="label" data-reveal-label>
+      <span class="label__num">05</span><span>{t('sec.certs')}</span><span class="label__stitch"></span>
+    </p>
+    <div class="certs__head">
+      <h2 class="display" data-reveal-lines>
+        <span class="reveal-line"><span>{t('sec.certs')}</span></span>
+      </h2>
+      <p class="certs__lead">{t('certs.lead')}</p>
+    </div>
+
+    <ul class="certs__list">
+      {
+        certs.map((c, i) => (
+          <li class:list={['certs__row', `is-${c.status}`]} data-reveal-row>
+            <details class="x-expand" data-expand>
+              <summary class="certs__sum">
+                <span class="certs__idx mono">{String(i + 1).padStart(2, '0')}</span>
+                <span class="certs__name">{c.name}</span>
+                <span class="certs__issuer mono">{c.issuer}</span>
+                <span class="certs__status mono">
+                  <span class="certs__dot" aria-hidden="true" />
+                  {t(statusKey[c.status])}
+                  {c.year && ` · ${c.year}`}
+                </span>
+                <span class="certs__toggle" aria-hidden="true">+</span>
+              </summary>
+              <div class="x-expand__body">
+                <p class="certs__detail">
+                  {c.detail[lang]}
+                  {c.url && (
+                    <>
+                      {' '}
+                      <a href={c.url} rel="noopener" target="_blank">
+                        ↗
+                      </a>
+                    </>
+                  )}
+                </p>
+              </div>
+            </details>
+          </li>
+        ))
+      }
+    </ul>
+  </div>
+</section>
+
+<style>
+  .certs {
+    --bg: var(--c-paper);
+  }
+  .certs__wrap {
+    padding-block: var(--sp-9);
+    display: grid;
+    gap: var(--sp-7);
+  }
+  .certs__head {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: var(--sp-5);
+  }
+  .certs__lead {
+    color: var(--fg-muted);
+    max-width: 30ch;
+  }
+  .certs__list {
+    list-style: none;
+    padding: 0;
+    border-top: 1px solid var(--line);
+  }
+  .certs__row {
+    border-bottom: 1px solid var(--line);
+  }
+  .certs__sum {
+    display: grid;
+    grid-template-columns: 3rem minmax(0, 1.6fr) minmax(0, 1fr) minmax(0, 0.9fr) 2rem;
+    gap: var(--sp-4);
+    align-items: baseline;
+    padding-block: var(--sp-5);
+    transition: background var(--dur-fast) var(--ease-out), padding var(--dur-base) var(--ease-out);
+  }
+  .certs__sum:hover {
+    padding-left: var(--sp-3);
+    background: linear-gradient(90deg, var(--c-paper-2), transparent);
+  }
+  .certs__idx {
+    color: var(--fg-muted);
+    font-size: var(--fs-xs);
+  }
+  .certs__name {
+    font-family: var(--font-display);
+    font-size: var(--fs-lg);
+    font-weight: 500;
+    line-height: 1.1;
+    letter-spacing: -0.015em;
+  }
+  .certs__issuer,
+  .certs__status {
+    font-size: var(--fs-xs);
+    color: var(--fg-muted);
+  }
+  .certs__status {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--sp-2);
+  }
+  .certs__dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    border: 1.5px solid var(--c-thread-dark);
+  }
+  .is-done .certs__dot {
+    background: var(--c-thread-dark);
+  }
+  .certs__toggle {
+    justify-self: end;
+    font-family: var(--font-mono);
+    font-size: var(--fs-lg);
+    line-height: 1;
+    transition: transform var(--dur-base) var(--ease-out);
+  }
+  details[open] .certs__toggle {
+    transform: rotate(45deg);
+  }
+  .certs__detail {
+    padding: 0 0 var(--sp-5) calc(3rem + var(--sp-4));
+    max-width: calc(var(--measure) + 4rem);
+    color: var(--fg-muted);
+  }
+  @media (max-width: 767px) {
+    .certs__sum {
+      grid-template-columns: 2rem minmax(0, 1fr) 1.5rem;
+    }
+    .certs__issuer,
+    .certs__status {
+      grid-column: 2;
+    }
+    .certs__toggle {
+      grid-column: 3;
+      grid-row: 1;
+    }
+    .certs__detail {
+      padding-left: calc(2rem + var(--sp-4));
+    }
+  }
+</style>

@@ -1,0 +1,136 @@
+---
+import Letters from './Letters.astro';
+import { type Lang, useT } from '../i18n/ui';
+interface Props { lang: Lang }
+const t = useT(Astro.props.lang);
+---
+
+<section id="entrada" class="hero scene" data-section data-title={t('sec.intro')} data-theme="light">
+  <div class="hero__stage" data-hero-stage>
+    <p class="hero__kicker label">
+      <span class="label__num">01</span>
+      <span>{t('hero.kicker')}</span>
+    </p>
+
+    <h1 class="hero__title" data-repel>
+      <span class="hero__line hero__line--1" data-hero-line data-fit>
+        <Letters text="beautiful" />
+      </span>
+      <span class="hero__line hero__line--2" data-hero-line data-fit>
+        <Letters text="engineering" />
+      </span>
+    </h1>
+
+    <div class="hero__foot">
+      <p class="hero__areas mono">{t('hero.areas')}</p>
+      <p class="hero__place mono">{t('hero.place')}</p>
+      <p class="hero__scroll mono" aria-hidden="true">
+        {t('hero.scroll')} <span class="hero__arrow">↓</span>
+      </p>
+    </div>
+
+    <div class="hero__seam" data-seam aria-hidden="true"></div>
+    <span class="hero__edge hero__edge--l" data-seam-edge="l" aria-hidden="true"></span>
+    <span class="hero__edge hero__edge--r" data-seam-edge="r" aria-hidden="true"></span>
+  </div>
+</section>
+
+<style>
+  .hero {
+    --bg: var(--c-paper);
+  }
+  .hero__stage {
+    position: relative;
+    min-height: 100svh;
+    display: grid;
+    grid-template-rows: auto 1fr auto;
+    padding: calc(var(--sp-8) + var(--sp-4)) var(--gutter) var(--sp-5);
+    overflow: hidden;
+  }
+  .hero__kicker {
+    max-width: 34rem;
+  }
+  .hero__title {
+    align-self: center;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--font-display);
+    line-height: 0.82;
+    letter-spacing: -0.045em;
+    color: var(--c-ink);
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  .hero__line {
+    display: block;
+    white-space: nowrap;
+    width: 100%;
+  }
+  .hero__line--1 {
+    font-size: 19.5vw;
+    font-style: italic;
+    font-weight: 300;
+    color: var(--c-denim-700);
+  }
+  .hero__line--2 {
+    font-size: 15.6vw;
+    font-weight: 620;
+    text-align: right;
+  }
+  .hero__foot {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: var(--sp-6);
+    align-items: end;
+    padding-top: var(--sp-4);
+    border-top: var(--stitch-dark);
+    color: var(--fg-muted);
+  }
+  .hero__arrow {
+    display: inline-block;
+    animation: nudge 1.8s var(--ease-in-out) infinite;
+  }
+  @keyframes nudge {
+    50% {
+      transform: translateY(4px);
+    }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .hero__arrow {
+      animation: none;
+    }
+  }
+  @media (max-width: 640px) {
+    .hero__foot {
+      grid-template-columns: 1fr auto;
+    }
+    .hero__scroll {
+      display: none;
+    }
+  }
+
+  /* Costura que se abre al desplazar */
+  .hero__seam {
+    position: absolute;
+    inset: 0;
+    background: var(--c-denim-900);
+    clip-path: inset(0 calc((1 - var(--o, 0)) * 50%) 0 calc((1 - var(--o, 0)) * 50%));
+    pointer-events: none;
+    visibility: hidden;
+  }
+  .hero__edge {
+    visibility: hidden;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 0;
+    border-left: 2px dashed var(--c-thread);
+  }
+  .hero__edge--l {
+    left: calc(50% - var(--o, 0) * 50%);
+  }
+  .hero__edge--r {
+    left: calc(50% + var(--o, 0) * 50% - 2px);
+  }
+</style>

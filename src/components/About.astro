@@ -1,0 +1,88 @@
+---
+import PhotoSlot from './PhotoSlot.astro';
+import { about } from '../data/site';
+import { type Lang, useT } from '../i18n/ui';
+interface Props { lang: Lang }
+const { lang } = Astro.props;
+const t = useT(lang);
+---
+
+<section id="sobre-mi" class="about scene scene--dark" data-section data-title={t('sec.about')} data-theme="dark">
+  <div class="wrap about__wrap">
+    <p class="label" data-reveal-label>
+      <span class="label__num">02</span><span>{t('sec.about')}</span><span class="label__stitch"></span>
+    </p>
+
+    <h2 class="about__title display" data-reveal-lines>
+      <span class="reveal-line"><span>{t('about.lead1')} <PhotoSlot lang={lang} /> {t('about.lead2')}</span></span>
+    </h2>
+
+    <div class="about__cols">
+      <p class="about__body" data-reveal-fade>{about.body[lang]}</p>
+
+      <details class="x-expand about__more" data-expand>
+        <summary class="btn">{t('about.more')} <span class="btn__plus" aria-hidden="true">+</span></summary>
+        <div class="x-expand__body">
+          <ul>
+            {about.more.map((m) => <li>{m[lang]}</li>)}
+          </ul>
+        </div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<style>
+  .about__wrap {
+    padding-block: var(--sp-9) var(--sp-9);
+    min-height: 100svh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: var(--sp-7);
+  }
+  .about__title {
+    font-size: var(--fs-xxl);
+  }
+  .about__cols {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    gap: var(--sp-7);
+    align-items: start;
+  }
+  .about__body {
+    font-size: var(--fs-lg);
+    line-height: 1.35;
+    max-width: 30ch;
+    font-family: var(--font-display);
+    font-weight: 380;
+  }
+  .about__more {
+    justify-self: start;
+    color: var(--fg);
+  }
+  .about__more ul {
+    margin-top: var(--sp-5);
+    padding-left: 0;
+    list-style: none;
+    display: grid;
+    gap: var(--sp-4);
+    max-width: var(--measure);
+    color: var(--fg-muted);
+  }
+  .about__more li {
+    padding-left: var(--sp-5);
+    border-left: var(--stitch);
+  }
+  .about__more[open] .btn__plus {
+    transform: rotate(45deg);
+  }
+  @media (max-width: 800px) {
+    .about__cols {
+      grid-template-columns: 1fr;
+    }
+    .about__body {
+      max-width: none;
+    }
+  }
+</style>

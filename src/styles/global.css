@@ -1,0 +1,221 @@
+@import './tokens.css';
+
+/* — Reset mínimo — */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+* {
+  margin: 0;
+}
+html {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+html:not(.lenis) {
+  scroll-behavior: smooth;
+}
+@media (prefers-reduced-motion: reduce) {
+  html:not(.lenis) {
+    scroll-behavior: auto;
+  }
+}
+body {
+  min-height: 100svh;
+  background: var(--c-paper);
+  color: var(--fg);
+  font-family: var(--font-text);
+  font-size: var(--fs-md);
+  line-height: var(--lh-body);
+  font-optical-sizing: auto;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  overflow-x: clip;
+}
+img,
+svg,
+video {
+  display: block;
+  max-width: 100%;
+}
+button,
+input {
+  font: inherit;
+  color: inherit;
+}
+button {
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+a {
+  color: inherit;
+  text-underline-offset: 0.18em;
+  text-decoration-thickness: 1px;
+}
+:focus-visible {
+  outline: 2px solid var(--focus);
+  outline-offset: 3px;
+  border-radius: var(--radius-s);
+}
+::selection {
+  background: var(--c-denim-700);
+  color: var(--c-paper);
+}
+
+/* — Utilidades — */
+.sr-only {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+.skip-link {
+  position: fixed;
+  top: var(--sp-3);
+  left: var(--sp-3);
+  z-index: calc(var(--z-loader) + 1);
+  padding: var(--sp-2) var(--sp-4);
+  background: var(--c-ink);
+  color: var(--c-paper);
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  transform: translateY(-200%);
+}
+.skip-link:focus {
+  transform: none;
+}
+
+.wrap {
+  width: 100%;
+  max-width: var(--max-w);
+  margin-inline: auto;
+  padding-inline: var(--gutter);
+}
+
+/* Etiqueta de sección: "02 — Sobre mí" con costura */
+.label {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  font-weight: 500;
+  letter-spacing: var(--track-label);
+  text-transform: uppercase;
+  color: var(--fg-muted);
+}
+.label__num {
+  color: var(--accent);
+}
+.label__stitch {
+  flex: 1;
+  height: 0;
+  border-top: 1.5px dashed var(--accent);
+  opacity: 0.7;
+  transform-origin: left center;
+}
+
+.display {
+  font-family: var(--font-display);
+  font-weight: 560;
+  font-size: var(--fs-xxl);
+  line-height: var(--lh-tight);
+  letter-spacing: var(--track-display);
+  font-variation-settings: 'SOFT' 50, 'WONK' 0;
+}
+.display em {
+  font-style: italic;
+  font-weight: 300;
+}
+
+.mono {
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+}
+
+/* Máscara para revelar líneas (se anima con GSAP) */
+.reveal-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.08em;
+  margin-bottom: -0.08em;
+}
+.reveal-line > span {
+  display: inline-block;
+}
+
+/* Escena: bloque de color a pantalla completa */
+.scene {
+  position: relative;
+  background: var(--bg);
+  color: var(--fg);
+}
+
+/* Botón "Ver detalle" */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 0.7em 1.15em;
+  border: 1px solid currentColor;
+  border-radius: 999px;
+  font-family: var(--font-mono);
+  font-size: var(--fs-sm);
+  letter-spacing: 0.02em;
+  text-decoration: none;
+  transition:
+    background var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) var(--ease-out);
+}
+.btn:hover {
+  background: var(--fg);
+  color: var(--bg);
+}
+.btn__plus {
+  display: inline-block;
+  transition: transform var(--dur-base) var(--ease-out);
+}
+.btn:hover .btn__plus {
+  transform: rotate(90deg);
+}
+
+/* — Desplegables (details) — */
+.x-expand > summary {
+  list-style: none;
+  cursor: pointer;
+}
+.x-expand > summary::-webkit-details-marker {
+  display: none;
+}
+.x-expand__body {
+  overflow: hidden;
+}
+
+/* Lenis */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+/* hidden (no clip) para que el navegador conserve la posición de scroll */
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+[data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.no-scroll,
+.no-scroll body {
+  overflow: hidden;
+}
