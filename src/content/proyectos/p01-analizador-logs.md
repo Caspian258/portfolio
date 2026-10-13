@@ -1,9 +1,8 @@
 ---
 codigo: P01
 orden: 1
-# DRAFT: set to true once the copy is approved.
-aprobado: false
-fecha: 2026-10-03
+aprobado: true
+fecha: 2026-10-12
 areas: [ciberseguridad, programacion]
 stack: [Python 3, csv, argparse, Linux]
 repo: https://github.com/Caspian258/Detector
@@ -56,6 +55,3 @@ en:
     - Using the csv and argparse libraries; argparse was my favorite because it lets the user interact with the program.
     - The hardest part was turning "3 failures in 300 seconds" into code and splitting the time and date out of each line; reading the documentation solved it.
 ---
-
-Notas internas (no se muestran en el sitio): texto basado en el README de
-github.com/Caspian258/Detector. Pendiente de aprobación del autor.
